@@ -141,6 +141,37 @@
 			]
 		},
 		{
+			"name": "Table layout",
+			"className": "TableLayout",
+			"description": "Adds support for different table types and layouts, allowing to distinguish between content tables and layout tables.",
+			"docs": "features/tables/tables-layout.html",
+			"path": "src/tablelayout",
+			"requires": [
+				"Table",
+				"TableToolbar"
+			],
+			"uiComponents": [
+				{
+					"type": "Button",
+					"name": "insertTableLayout",
+					"iconPath": "@ckeditor/ckeditor5-icons/theme/icons/table-layout.svg"
+				},
+				{
+					"type": "Button",
+					"name": "tableType",
+					"iconPath": "@ckeditor/ckeditor5-icons/theme/icons/table-properties.svg",
+					"toolbars": [
+						"table.contentToolbar"
+					]
+				}
+			],
+			"htmlOutput": [
+				{
+					"classes": [ "layout-table", "content-table" ]
+				}
+			]
+		},
+		{
 			"name": "Table toolbar",
 			"className": "TableToolbar",
 			"description": "Creates configurable toolbars for both the table feature and table content. They show up when the table widget or the content inside a table cell are selected.",
@@ -186,6 +217,33 @@
 				{
 					"elements": "col",
 					"styles": "width"
+				}
+			]
+		},
+		{
+			"name": "PlainTableOutput",
+			"className": "PlainTableOutput",
+			"description": "This plugin strips the `<figure>` tag which surrounds tables, and moves attributes to the `<table>` in the data downcast.",
+			"docs": "features/tables/tables-layout.html",
+			"path": "src/plaintableoutput.js",
+			"htmlOutput": [
+				{
+					"elements": [
+						"table",
+						"thead",
+						"tbody",
+						"tr"
+					]
+				},
+				{
+					"elements": [
+						"td",
+						"th"
+					],
+					"attributes": [
+						"colspan",
+						"rowspan"
+					]
 				}
 			]
 		}
