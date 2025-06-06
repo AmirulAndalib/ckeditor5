@@ -7,17 +7,15 @@
  * @module engine/view/domconverter
  */
 
-/* globals Node, NodeFilter, DOMParser */
-
-import ViewText from './text.js';
-import ViewElement from './element.js';
-import ViewUIElement from './uielement.js';
-import ViewPosition from './position.js';
-import ViewRange from './range.js';
-import ViewSelection from './selection.js';
-import ViewDocumentFragment from './documentfragment.js';
-import ViewTreeWalker from './treewalker.js';
-import { default as Matcher, type MatcherPattern } from './matcher.js';
+import { ViewText } from './text.js';
+import { ViewElement } from './element.js';
+import { ViewUIElement } from './uielement.js';
+import { ViewPosition } from './position.js';
+import { ViewRange } from './range.js';
+import { ViewSelection } from './selection.js';
+import { ViewDocumentFragment } from './documentfragment.js';
+import { ViewTreeWalker } from './treewalker.js';
+import { Matcher, type MatcherPattern } from './matcher.js';
 import {
 	BR_FILLER, INLINE_FILLER_LENGTH, NBSP_FILLER, MARKED_NBSP_FILLER,
 	getDataWithoutFiller, isInlineFiller, startsWithFiller
@@ -35,12 +33,12 @@ import {
 	env
 } from '@ckeditor/ckeditor5-utils';
 
-import type ViewNode from './node.js';
-import type Document from './document.js';
-import type DocumentSelection from './documentselection.js';
-import type EditableElement from './editableelement.js';
-import type ViewTextProxy from './textproxy.js';
-import type ViewRawElement from './rawelement.js';
+import { type ViewNode } from './node.js';
+import { type Document } from './document.js';
+import { type DocumentSelection } from './documentselection.js';
+import { type EditableElement } from './editableelement.js';
+import { type ViewTextProxy } from './textproxy.js';
+import { type ViewRawElement } from './rawelement.js';
 
 // @if CK_DEBUG_TYPING // const { _buildLogMessage } = require( '../dev-utils/utils.js' );
 
@@ -72,7 +70,7 @@ const UNSAFE_ELEMENT_REPLACEMENT_ATTRIBUTE = 'data-ck-unsafe-element';
  * The DOM converter keeps DOM elements to view element bindings, so when the converter gets destroyed, the bindings are lost.
  * Two converters will keep separate binding maps, so one tree view can be bound with two DOM trees.
  */
-export default class DomConverter {
+export class DomConverter {
 	public readonly document: Document;
 
 	/**
@@ -1244,7 +1242,7 @@ export default class DomConverter {
 		try {
 			range.setStart( selection.anchorNode!, selection.anchorOffset );
 			range.setEnd( selection.focusNode!, selection.focusOffset );
-		} catch ( e ) {
+		} catch {
 			// Safari sometimes gives us a selection that makes Range.set{Start,End} throw.
 			// See https://github.com/ckeditor/ckeditor5/issues/12375.
 			return false;
@@ -2016,7 +2014,7 @@ function isGeckoRestrictedDomSelection( domSelection: DomSelection ): boolean {
 
 	try {
 		Object.prototype.toString.call( container );
-	} catch ( error ) {
+	} catch {
 		return true;
 	}
 

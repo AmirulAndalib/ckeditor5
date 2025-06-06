@@ -3,8 +3,6 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-/* global document, console */
-
 import { Essentials } from '@ckeditor/ckeditor5-essentials';
 import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
 import { Heading } from '@ckeditor/ckeditor5-heading';
@@ -15,8 +13,8 @@ import { Link } from '@ckeditor/ckeditor5-link';
 
 import { getData as getModelData, setData as setModelData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model.js';
 
-import BookmarkEditing from '../src/bookmarkediting.js';
-import UpdateBookmarkCommand from '../src/updatebookmarkcommand.js';
+import { BookmarkEditing } from '../src/bookmarkediting.js';
+import { UpdateBookmarkCommand } from '../src/updatebookmarkcommand.js';
 
 describe( 'UpdateBookmarkCommand', () => {
 	let domElement, editor, model, command, stub;

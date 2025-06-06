@@ -21,16 +21,16 @@ import {
 	type ListDropdownButtonDefinition
 } from 'ckeditor5/src/ui.js';
 
-import { normalizeOptions } from './utils.js';
+import { normalizeFontFamilies, normalizeOptions } from './utils.js';
 import { FONT_FAMILY } from '../utils.js';
 
 import type { FontFamilyOption } from '../fontconfig.js';
-import type FontFamilyCommand from './fontfamilycommand.js';
+import { type FontFamilyCommand } from './fontfamilycommand.js';
 
 /**
  * The font family UI plugin. It introduces the `'fontFamily'` dropdown.
  */
-export default class FontFamilyUI extends Plugin {
+export class FontFamilyUI extends Plugin {
 	/**
 	 * @inheritDoc
 	 */
@@ -186,7 +186,10 @@ function _prepareListOptions( options: Array<FontFamilyOption>, command: FontFam
 				return false;
 			}
 
-			return value.split( ',' )[ 0 ].replace( /'/g, '' ).toLowerCase() === option.model.toLowerCase();
+			const valueNormalized = normalizeFontFamilies( value )[ 0 ].toLowerCase();
+			const optionNormalized = normalizeFontFamilies( option.model )[ 0 ].toLowerCase();
+
+			return valueNormalized === optionNormalized;
 		} );
 
 		// Try to set a dropdown list item style.

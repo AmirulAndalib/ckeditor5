@@ -3,14 +3,13 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-/* global document */
 import { IconMarker, IconPen, IconEraser } from 'ckeditor5/src/icons.js';
 
-import HighlightEditing from '../src/highlightediting.js';
-import HighlightUI from '../src/highlightui.js';
+import { HighlightEditing } from '../src/highlightediting.js';
+import { HighlightUI } from '../src/highlightui.js';
 
-import ClassicTestEditor from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor.js';
-import testUtils from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
+import { ClassicTestEditor } from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor.js';
+import { testUtils } from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
 import { _clear as clearTranslations, add as addTranslations } from '@ckeditor/ckeditor5-utils/src/translation-service.js';
 import { ListSeparatorView, MenuBarMenuListItemView, MenuBarMenuView } from '@ckeditor/ckeditor5-ui';
 

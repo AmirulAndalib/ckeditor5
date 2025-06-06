@@ -5,19 +5,17 @@
 
 import { range } from 'es-toolkit/compat';
 
-import ClassicTestEditor from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor.js';
-import Image from '@ckeditor/ckeditor5-image/src/image.js';
-import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption.js';
-import ImageBlockEditing from '@ckeditor/ckeditor5-image/src/image/imageblockediting.js';
-import ImageInlineEditing from '@ckeditor/ckeditor5-image/src/image/imageinlineediting.js';
-import LinkImage from '@ckeditor/ckeditor5-link/src/linkimage.js';
-import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
+import { ClassicTestEditor } from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor.js';
+import { Image } from '@ckeditor/ckeditor5-image/src/image.js';
+import { ImageCaption } from '@ckeditor/ckeditor5-image/src/imagecaption.js';
+import { ImageBlockEditing } from '@ckeditor/ckeditor5-image/src/image/imageblockediting.js';
+import { ImageInlineEditing } from '@ckeditor/ckeditor5-image/src/image/imageinlineediting.js';
+import { LinkImage } from '@ckeditor/ckeditor5-link/src/linkimage.js';
+import { Paragraph } from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
 
 import { getModelDataWithAttributes } from '../_utils/utils.js';
-import GeneralHtmlSupport from '../../src/generalhtmlsupport.js';
-import ImageElementSupport from '../../src/integrations/image.js';
-
-/* global document */
+import { GeneralHtmlSupport } from '../../src/generalhtmlsupport.js';
+import { ImageElementSupport } from '../../src/integrations/image.js';
 
 describe( 'ImageElementSupport', () => {
 	let editor, model, editorElement, dataFilter;
@@ -1437,7 +1435,7 @@ describe( 'ImageElementSupport', () => {
 				styles: 'background'
 			} ] );
 
-			/* eslint-disable max-len */
+			/* eslint-disable @stylistic/max-len */
 			editor.setData(
 				'<figure class="image allow disallow invalid" data-allow="allow" data-disallow="disallow" style="color:red;background:blue;width:10px;">' +
 					'<img src="/assets/sample.png" class="allow disallow invalid" data-allow="allow" data-disallow="disallow" style="color:red;background:blue;width:10px;">' +
@@ -1470,7 +1468,7 @@ describe( 'ImageElementSupport', () => {
 					'<figcaption class="allow" style="color:red;" data-allow="allow">A caption</figcaption>' +
 				'</figure>'
 			);
-			/* eslint-enable max-len */
+			/* eslint-enable @stylistic/max-len */
 		} );
 
 		it( 'should create a marker before GHS converts attributes', () => {

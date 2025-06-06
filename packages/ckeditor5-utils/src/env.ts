@@ -3,13 +3,11 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-/* globals navigator:false */
-
 /**
  * @module utils/env
  */
 
-import global from './dom/global.js';
+import { global } from './dom/global.js';
 
 /**
  * Safely returns `userAgent` from browser's navigator API in a lower case.
@@ -19,7 +17,7 @@ export function getUserAgent(): string {
 	// In some environments navigator API might not be available.
 	try {
 		return navigator.userAgent.toLowerCase();
-	} catch ( e ) {
+	} catch {
 		return '';
 	}
 }
@@ -102,7 +100,7 @@ export interface EnvFeaturesType {
 /**
  * A namespace containing environment and browser information.
  */
-const env: EnvType = {
+export const env: EnvType = {
 	isMac: /* #__PURE__ */ isMac( userAgent ),
 
 	isWindows: /* #__PURE__ */ isWindows( userAgent ),
@@ -129,8 +127,6 @@ const env: EnvType = {
 		isRegExpUnicodePropertySupported: /* #__PURE__ */ isRegExpUnicodePropertySupported()
 	}
 };
-
-export default env;
 
 /**
  * Checks if User Agent represented by the string is running on Macintosh.
@@ -219,7 +215,7 @@ export function isRegExpUnicodePropertySupported(): boolean {
 	try {
 		// Usage of regular expression literal cause error during build (ckeditor/ckeditor5-dev#534).
 		isSupported = 'ć'.search( new RegExp( '[\\p{L}]', 'u' ) ) === 0;
-	} catch ( error ) {
+	} catch {
 		// Firefox throws a SyntaxError when the group is unsupported.
 	}
 

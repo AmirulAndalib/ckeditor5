@@ -3,9 +3,7 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-/* global window */
-
-import testUtils from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
+import { testUtils } from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
 import { createEditabilityChecker } from '../../src/ckboximageedit/utils.js';
 import { Element } from '@ckeditor/ckeditor5-engine';
 

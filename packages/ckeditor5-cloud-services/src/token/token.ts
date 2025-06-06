@@ -7,8 +7,6 @@
  * @module cloud-services/token/token
  */
 
-/* globals XMLHttpRequest, setTimeout, clearTimeout, atob */
-
 import { ObservableMixin, CKEditorError, logWarning } from 'ckeditor5/src/utils.js';
 import type { TokenUrl } from '../cloudservicesconfig.js';
 
@@ -21,7 +19,7 @@ const TOKEN_FAILED_REFRESH_TIMEOUT_TIME = 5000; // 5 seconds
  * The value of the token is retrieved from the specified URL and refreshed every 1 hour by default.
  * If the token retrieval fails, the token will automatically retry in 5 seconds intervals.
  */
-export default class Token extends /* #__PURE__ */ ObservableMixin() {
+export class Token extends /* #__PURE__ */ ObservableMixin() {
 	/**
 	 * Value of the token.
 	 * The value of the token is undefined if `initValue` is not provided or `init` method was not called.
@@ -233,7 +231,7 @@ export default class Token extends /* #__PURE__ */ ObservableMixin() {
 			const tokenRefreshTimeoutTime = Math.floor( ( ( tokenExpireTime * 1000 ) - Date.now() ) / 2 );
 
 			return tokenRefreshTimeoutTime;
-		} catch ( err ) {
+		} catch {
 			return DEFAULT_TOKEN_REFRESH_TIMEOUT_TIME;
 		}
 	}

@@ -7,8 +7,6 @@
  * @module image/imageupload/imageuploadprogress
  */
 
-/* globals setTimeout */
-
 import { type Editor, Plugin } from 'ckeditor5/src/core.js';
 import { FileRepository, type FileLoader } from 'ckeditor5/src/upload.js';
 
@@ -25,13 +23,13 @@ import type {
 	DowncastAttributeEvent,
 	Element
 } from 'ckeditor5/src/engine.js';
-import type ImageUtils from '../imageutils.js';
+import { type ImageUtils } from '../imageutils.js';
 
 /**
  * The image upload progress plugin.
  * It shows a placeholder when the image is read from the disk and a progress bar while the image is uploading.
  */
-export default class ImageUploadProgress extends Plugin {
+export class ImageUploadProgress extends Plugin {
 	/**
 	 * @inheritDoc
 	 */

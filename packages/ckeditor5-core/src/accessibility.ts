@@ -8,7 +8,7 @@
  */
 
 import { CKEditorError } from '@ckeditor/ckeditor5-utils';
-import type Editor from './editor/editor.js';
+import { type Editor } from './editor/editor.js';
 
 const DEFAULT_CATEGORY_ID = 'contentEditing' as const;
 export const DEFAULT_GROUP_ID = 'common' as const;
@@ -22,7 +22,7 @@ export const DEFAULT_GROUP_ID = 'common' as const;
  * * New info entries can be added using the {@link #addKeystrokeInfoCategory}, {@link #addKeystrokeInfoGroup},
  * and {@link #addKeystrokeInfos} methods.
  */
-export default class Accessibility {
+export class Accessibility {
 	/**
 	 * Stores information about keystrokes brought by editor features for the users to interact with the editor, mainly
 	 * keystroke combinations and their accessible labels.
@@ -85,7 +85,7 @@ export default class Accessibility {
 				keystroke: [ [ 'arrowup' ], [ 'arrowright' ], [ 'arrowdown' ], [ 'arrowleft' ] ]
 			},
 			{
-				// eslint-disable-next-line max-len
+				// eslint-disable-next-line @stylistic/max-len
 				label: t( 'Execute the currently focused button. Executing buttons that interact with the editor content moves the focus back to the content.' ),
 				keystroke: [ [ 'Enter' ], [ 'Space' ] ]
 			}

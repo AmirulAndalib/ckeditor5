@@ -3,9 +3,9 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-import Editor from '@ckeditor/ckeditor5-core/src/editor/editor.js';
-import Model from '@ckeditor/ckeditor5-engine/src/model/model.js';
-import LegacyListCommand from '../../src/legacylist/legacylistcommand.js';
+import { Editor } from '@ckeditor/ckeditor5-core/src/editor/editor.js';
+import { Model } from '@ckeditor/ckeditor5-engine/src/model/model.js';
+import { LegacyListCommand } from '../../src/legacylist/legacylistcommand.js';
 import { setData, getData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model.js';
 
 describe( 'LegacyListCommand', () => {
@@ -187,7 +187,7 @@ describe( 'LegacyListCommand', () => {
 				} );
 
 				it( 'should handle outdenting sub-items when list item is turned off', () => {
-					/* eslint-disable max-len */
+					/* eslint-disable @stylistic/max-len */
 					// Taken from docs.
 					//
 					// 1  * --------
@@ -223,7 +223,7 @@ describe( 'LegacyListCommand', () => {
 					// 12 * --------
 					// 13    * --------
 					// 14       * --------
-					/* eslint-enable max-len */
+					/* eslint-enable @stylistic/max-len */
 
 					setData(
 						model,

@@ -3,12 +3,10 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-/* globals document */
-
-import View from '../../../src/view/view.js';
-import ViewPosition from '../../../src/view/position.js';
-import ViewRange from '../../../src/view/range.js';
-import createViewRoot from '../../view/_utils/createroot.js';
+import { View } from '../../../src/view/view.js';
+import { ViewPosition } from '../../../src/view/position.js';
+import { ViewRange } from '../../../src/view/range.js';
+import { createViewRoot } from '../../view/_utils/createroot.js';
 import { StylesProcessor } from '../../../src/view/stylesmap.js';
 
 const view = new View( new StylesProcessor() );

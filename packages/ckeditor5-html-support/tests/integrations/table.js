@@ -3,23 +3,21 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-import ClassicTestEditor from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor.js';
-import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
-import Typing from '@ckeditor/ckeditor5-typing/src/typing.js';
-import Table from '@ckeditor/ckeditor5-table/src/table.js';
-import TableCaption from '@ckeditor/ckeditor5-table/src/tablecaption.js';
-import TableColumnResize from '@ckeditor/ckeditor5-table/src/tablecolumnresize.js';
+import { ClassicTestEditor } from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor.js';
+import { Paragraph } from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
+import { Typing } from '@ckeditor/ckeditor5-typing/src/typing.js';
+import { Table } from '@ckeditor/ckeditor5-table/src/table.js';
+import { TableCaption } from '@ckeditor/ckeditor5-table/src/tablecaption.js';
+import { TableColumnResize } from '@ckeditor/ckeditor5-table/src/tablecolumnresize.js';
 import { ClipboardPipeline } from '@ckeditor/ckeditor5-clipboard';
 import { priorities } from 'ckeditor5/src/utils.js';
 import { getData, setData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model.js';
 
-import GeneralHtmlSupport from '../../src/generalhtmlsupport.js';
+import { GeneralHtmlSupport } from '../../src/generalhtmlsupport.js';
 import { getModelDataWithAttributes } from '../_utils/utils.js';
-import TableElementSupport from '../../src/integrations/table.js';
+import { TableElementSupport } from '../../src/integrations/table.js';
 
 import { range } from 'es-toolkit/compat';
-
-/* global document */
 
 describe( 'TableElementSupport', () => {
 	let editor, model, editorElement, dataFilter;
@@ -2134,7 +2132,7 @@ describe( 'TableElementSupport', () => {
 				styles: 'background'
 			} ] );
 
-			/* eslint-disable max-len */
+			/* eslint-disable @stylistic/max-len */
 			editor.setData(
 				'<figure class="table allow disallow" invalid-attribute="invalid" data-allow="allow" data-disallow="disallow" style="color:red;background:blue;width:10px;">' +
 					'<table class="allow disallow invalid" invalid-attribute="invalid" data-allow="allow" data-disallow="disallow" style="color:red;background:blue;width:10px;">' +
@@ -2237,7 +2235,7 @@ describe( 'TableElementSupport', () => {
 					'</table>' +
 				'</figure>'
 			);
-			/* eslint-enable max-len */
+			/* eslint-enable @stylistic/max-len */
 		} );
 	} );
 } );

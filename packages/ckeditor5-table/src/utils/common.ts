@@ -17,8 +17,8 @@ import type {
 	DocumentSelection
 } from 'ckeditor5/src/engine.js';
 
-import { downcastAttributeToStyle, upcastStyleToAttribute } from './../converters/tableproperties.js';
-import type TableUtils from '../tableutils.js';
+import { downcastAttributeToStyle, upcastStyleToAttribute } from '../converters/tableproperties.js';
+import { type TableUtils } from '../tableutils.js';
 
 /**
  * A common method to update the numeric value. If a value is the default one, it will be unset.
@@ -75,6 +75,8 @@ export function enableProperty(
 	options: {
 		modelAttribute: string;
 		styleName: string;
+		attributeName?: string;
+		attributeType?: 'length' | 'color';
 		defaultValue: string;
 		reduceBoxSides?: boolean;
 	}
@@ -84,6 +86,8 @@ export function enableProperty(
 	schema.extend( 'tableCell', {
 		allowAttributes: [ modelAttribute ]
 	} );
+
+	schema.setAttributeProperties( modelAttribute, { isFormatting: true } );
 
 	upcastStyleToAttribute( conversion, { viewElement: /^(td|th)$/, ...options } );
 	downcastAttributeToStyle( conversion, { modelElement: 'tableCell', ...options } );

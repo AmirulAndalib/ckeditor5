@@ -7,10 +7,11 @@
  * @module paste-from-office/normalizers/mswordnormalizer
  */
 
-import transformBookmarks from '../filters/bookmark.js';
+import { transformBookmarks } from '../filters/bookmark.js';
 import { transformListItemLikeElementsIntoLists } from '../filters/list.js';
 import { replaceImagesSourceWithBase64 } from '../filters/image.js';
-import removeMSAttributes from '../filters/removemsattributes.js';
+import { removeMSAttributes } from '../filters/removemsattributes.js';
+import { transformTables } from '../filters/table.js';
 import { UpcastWriter, type ViewDocument } from 'ckeditor5/src/engine.js';
 import type { Normalizer, NormalizerData } from '../normalizer.js';
 
@@ -20,7 +21,7 @@ const msWordMatch2 = /xmlns:o="urn:schemas-microsoft-com/i;
 /**
  * Normalizer for the content pasted from Microsoft Word.
  */
-export default class MSWordNormalizer implements Normalizer {
+export class MSWordNormalizer implements Normalizer {
 	public readonly document: ViewDocument;
 
 	public readonly hasMultiLevelListPlugin: boolean;
@@ -52,6 +53,7 @@ export default class MSWordNormalizer implements Normalizer {
 		transformBookmarks( documentFragment, writer );
 		transformListItemLikeElementsIntoLists( documentFragment, stylesString, this.hasMultiLevelListPlugin );
 		replaceImagesSourceWithBase64( documentFragment, data.dataTransfer.getData( 'text/rtf' ) );
+		transformTables( documentFragment, writer );
 		removeMSAttributes( documentFragment );
 
 		data.content = documentFragment;

@@ -7,8 +7,6 @@
  * @module cloud-services/uploadgateway/fileuploader
  */
 
-/* globals XMLHttpRequest, FormData, Blob, atob */
-
 import type { UploadResponse } from 'ckeditor5/src/upload.js';
 import { EmitterMixin, CKEditorError } from 'ckeditor5/src/utils.js';
 import type { InitializedToken } from '../token/token.js';
@@ -18,7 +16,7 @@ const BASE64_HEADER_REG_EXP = /^data:(\S*?);base64,/;
 /**
  * FileUploader class used to upload single file.
  */
-export default class FileUploader extends /* #__PURE__ */ EmitterMixin() {
+export class FileUploader extends /* #__PURE__ */ EmitterMixin() {
 	/**
 	 * A file that is being uploaded.
 	 */
@@ -254,7 +252,7 @@ function _base64ToBlob( base64: string, sliceSize = 512 ) {
 		}
 
 		return new Blob( byteArrays, { type: contentType } );
-	} catch ( error ) {
+	} catch {
 		/**
 		 * Problem with decoding Base64 image data.
 		 *

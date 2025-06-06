@@ -3,15 +3,13 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-/* globals document */
-
 import { IconParagraph } from '@ckeditor/ckeditor5-icons';
-import ClassicTestEditor from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor.js';
-import Paragraph from '../src/paragraph.js';
-import Heading from '@ckeditor/ckeditor5-heading/src/heading.js';
-import ParagraphButtonUI from '../src/paragraphbuttonui.js';
+import { ClassicTestEditor } from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor.js';
+import { Paragraph } from '../src/paragraph.js';
+import { Heading } from '@ckeditor/ckeditor5-heading/src/heading.js';
+import { ParagraphButtonUI } from '../src/paragraphbuttonui.js';
 import { setData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model.js';
-import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview.js';
+import { ButtonView } from '@ckeditor/ckeditor5-ui/src/button/buttonview.js';
 
 describe( 'HeadingButtonUI', () => {
 	let editorElement, editor;
