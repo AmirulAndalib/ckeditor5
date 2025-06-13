@@ -3,35 +3,33 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-/* globals document, window, Event */
-
 import { IconBookmarkMedium, IconBookmarkSmall, IconLink } from 'ckeditor5/src/icons.js';
-import ClassicTestEditor from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor.js';
-import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor.js';
+import { ClassicTestEditor } from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor.js';
+import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic/src/classiceditor.js';
 
-import testUtils from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
-import indexOf from '@ckeditor/ckeditor5-utils/src/dom/indexof.js';
-import isRange from '@ckeditor/ckeditor5-utils/src/dom/isrange.js';
+import { testUtils } from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
+import { indexOf } from '@ckeditor/ckeditor5-utils/src/dom/indexof.js';
+import { isRange } from '@ckeditor/ckeditor5-utils/src/dom/isrange.js';
 import { keyCodes } from '@ckeditor/ckeditor5-utils/src/keyboard.js';
 import { getData as getModelData, setData as setModelData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model.js';
 import { getData as getViewData } from '@ckeditor/ckeditor5-engine/src/dev-utils/view.js';
-import env from '@ckeditor/ckeditor5-utils/src/env.js';
-import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials.js';
-import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
-import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote.js';
-import BoldEditing from '@ckeditor/ckeditor5-basic-styles/src/bold/boldediting.js';
-import ClickObserver from '@ckeditor/ckeditor5-engine/src/view/observer/clickobserver.js';
-import ContextualBalloon from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon.js';
-import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview.js';
-import View from '@ckeditor/ckeditor5-ui/src/view.js';
+import { env } from '@ckeditor/ckeditor5-utils/src/env.js';
+import { Essentials } from '@ckeditor/ckeditor5-essentials/src/essentials.js';
+import { Paragraph } from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
+import { BlockQuote } from '@ckeditor/ckeditor5-block-quote/src/blockquote.js';
+import { BoldEditing } from '@ckeditor/ckeditor5-basic-styles/src/bold/boldediting.js';
+import { ClickObserver } from '@ckeditor/ckeditor5-engine/src/view/observer/clickobserver.js';
+import { ContextualBalloon } from '@ckeditor/ckeditor5-ui/src/panel/balloon/contextualballoon.js';
+import { ButtonView } from '@ckeditor/ckeditor5-ui/src/button/buttonview.js';
+import { View } from '@ckeditor/ckeditor5-ui/src/view.js';
 import { toWidget } from '@ckeditor/ckeditor5-widget';
 
-import LinkEditing from '../src/linkediting.js';
-import LinkUI from '../src/linkui.js';
-import LinkFormView from '../src/ui/linkformview.js';
-import LinkPreviewButtonView from '../src/ui/linkpreviewbuttonview.js';
-import LinkPropertiesView from '../src/ui/linkpropertiesview.js';
-import ManualDecorator from '../src/utils/manualdecorator.js';
+import { LinkEditing } from '../src/linkediting.js';
+import { LinkUI } from '../src/linkui.js';
+import { LinkFormView } from '../src/ui/linkformview.js';
+import { LinkPreviewButtonView } from '../src/ui/linkpreviewbuttonview.js';
+import { LinkPropertiesView } from '../src/ui/linkpropertiesview.js';
+import { LinkManualDecorator } from '../src/utils/manualdecorator.js';
 import { MenuBarMenuListItemButtonView, ToolbarView } from '@ckeditor/ckeditor5-ui';
 
 describe( 'LinkUI', () => {
@@ -350,7 +348,7 @@ describe( 'LinkUI', () => {
 
 			beforeEach( () => {
 				button = editor.ui.componentFactory.create( 'linkProperties' );
-				editor.commands.get( 'link' ).manualDecorators.add( new ManualDecorator( {
+				editor.commands.get( 'link' ).manualDecorators.add( new LinkManualDecorator( {
 					id: 'linkIsBar',
 					label: 'Bar',
 					attributes: {
@@ -1221,7 +1219,7 @@ describe( 'LinkUI', () => {
 	describe( '_addPropertiesView()', () => {
 		beforeEach( () => {
 			editor.editing.view.document.isFocused = true;
-			editor.commands.get( 'link' ).manualDecorators.add( new ManualDecorator( {
+			editor.commands.get( 'link' ).manualDecorators.add( new LinkManualDecorator( {
 				id: 'linkIsBar',
 				label: 'Bar',
 				attributes: {
@@ -2866,7 +2864,7 @@ describe( 'LinkUI', () => {
 
 	describe( 'properties view', () => {
 		beforeEach( () => {
-			editor.commands.get( 'link' ).manualDecorators.add( new ManualDecorator( {
+			editor.commands.get( 'link' ).manualDecorators.add( new LinkManualDecorator( {
 				id: 'linkIsBar',
 				label: 'Bar',
 				attributes: {

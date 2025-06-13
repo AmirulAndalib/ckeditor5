@@ -28,9 +28,9 @@ import type {
 } from 'ckeditor5/src/engine.js';
 import type { Delete, LastTextLineData } from 'ckeditor5/src/typing.js';
 
-import type Autoformat from './autoformat.js';
+import { type Autoformat } from './autoformat.js';
 
-export type TestCallback = ( text: string ) => {
+export type AutoformatTestCallback = ( text: string ) => {
 	remove: Array<Array<number>>;
 	format: Array<Array<number>>;
 };
@@ -92,14 +92,14 @@ export type TestCallback = ( text: string ) => {
  * } );
  * ```
  */
-export default function inlineAutoformatEditing(
+export function inlineAutoformatEditing(
 	editor: Editor,
 	plugin: Autoformat,
-	testRegexpOrCallback: RegExp | TestCallback,
+	testRegexpOrCallback: RegExp | AutoformatTestCallback,
 	formatCallback: ( writer: Writer, rangesToFormat: Array<Range> ) => boolean | undefined
 ): void {
 	let regExp: RegExp;
-	let testCallback: TestCallback | undefined;
+	let testCallback: AutoformatTestCallback | undefined;
 
 	if ( testRegexpOrCallback instanceof RegExp ) {
 		regExp = testRegexpOrCallback;

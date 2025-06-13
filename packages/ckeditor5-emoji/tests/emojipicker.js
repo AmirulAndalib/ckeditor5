@@ -3,8 +3,6 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-/* global window document console Event KeyboardEvent Response */
-
 import { ContextualBalloon, Dialog, ButtonView, MenuBarMenuListItemButtonView } from '@ckeditor/ckeditor5-ui';
 import { getData as getModelData, setData as setModelData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model.js';
 import { Typing } from '@ckeditor/ckeditor5-typing';
@@ -12,13 +10,13 @@ import { keyCodes } from '@ckeditor/ckeditor5-utils';
 import { Essentials } from '@ckeditor/ckeditor5-essentials';
 import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
 import { getData as getViewData } from '@ckeditor/ckeditor5-engine/src/dev-utils/view.js';
-import ClassicTestEditor from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor.js';
-import testUtils from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
+import { ClassicTestEditor } from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor.js';
+import { testUtils } from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
 
-import EmojiPicker from '../src/emojipicker.js';
-import EmojiRepository from '../src/emojirepository.js';
-import EmojiCommand from '../src/emojicommand.js';
-import EmojiPickerFormView from '../src/ui/emojipickerformview.js';
+import { EmojiPicker } from '../src/emojipicker.js';
+import { EmojiRepository } from '../src/emojirepository.js';
+import { EmojiCommand } from '../src/emojicommand.js';
+import { EmojiPickerFormView } from '../src/ui/emojipickerformview.js';
 
 function mockEmojiRepositoryValues( editor ) {
 	const repository = editor.plugins.get( 'EmojiRepository' );

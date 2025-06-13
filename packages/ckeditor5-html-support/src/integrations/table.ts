@@ -22,7 +22,7 @@ import { Plugin } from 'ckeditor5/src/core.js';
 import type { TableUtils } from '@ckeditor/ckeditor5-table';
 
 import { updateViewAttributes, type GHSViewAttributes } from '../utils.js';
-import DataFilter, { type DataFilterRegisterEvent } from '../datafilter.js';
+import { DataFilter, type HtmlSupportDataFilterRegisterEvent } from '../datafilter.js';
 import { getDescendantElement } from './integrationutils.js';
 
 const STYLE_ATTRIBUTES_TO_PROPAGATE = [
@@ -37,7 +37,7 @@ const STYLE_ATTRIBUTES_TO_PROPAGATE = [
 /**
  * Provides the General HTML Support integration with {@link module:table/table~Table Table} feature.
  */
-export default class TableElementSupport extends Plugin {
+export class TableElementSupport extends Plugin {
 	/**
 	 * @inheritDoc
 	 */
@@ -74,11 +74,11 @@ export default class TableElementSupport extends Plugin {
 		const dataFilter = editor.plugins.get( DataFilter );
 		const tableUtils: TableUtils = editor.plugins.get( 'TableUtils' );
 
-		dataFilter.on<DataFilterRegisterEvent>( 'register:figure', ( ) => {
+		dataFilter.on<HtmlSupportDataFilterRegisterEvent>( 'register:figure', ( ) => {
 			conversion.for( 'upcast' ).add( viewToModelFigureAttributeConverter( dataFilter ) );
 		} );
 
-		dataFilter.on<DataFilterRegisterEvent>( 'register:table', ( evt, definition ) => {
+		dataFilter.on<HtmlSupportDataFilterRegisterEvent>( 'register:table', ( evt, definition ) => {
 			if ( definition.model !== 'table' ) {
 				return;
 			}

@@ -27,7 +27,7 @@ const ENTER_EVENT_TYPES: Record<string, { isSoft: boolean }> = {
 /**
  * Enter observer introduces the {@link module:engine/view/document~Document#event:enter `Document#enter`} event.
  */
-export default class EnterObserver extends Observer {
+export class EnterObserver extends Observer {
 	/**
 	 * @inheritDoc
 	 */
@@ -96,10 +96,10 @@ export default class EnterObserver extends Observer {
  */
 export type ViewDocumentEnterEvent = BubblingEvent<{
 	name: 'enter';
-	args: [ EnterEventData ];
+	args: [ ViewDocumentEnterEventData ];
 }>;
 
-export interface EnterEventData extends DomEventData<InputEvent> {
+export interface ViewDocumentEnterEventData extends DomEventData<InputEvent> {
 
 	/**
 	 * Whether it is a soft enter (<kbd>Shift</kbd>+<kbd>Enter</kbd>) or a hard enter (<kbd>Enter</kbd>).

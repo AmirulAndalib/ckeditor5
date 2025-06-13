@@ -39,7 +39,7 @@ const titleLikeElements = new Set( [ 'paragraph', 'heading1', 'heading2', 'headi
  *
  * It splits the document into `Title` and `Body` sections.
  */
-export default class Title extends Plugin {
+export class Title extends Plugin {
 	/**
 	 * A reference to an empty paragraph in the body
 	 * created when there is no element in the body for the placeholder purposes.
@@ -614,12 +614,12 @@ function shouldRemoveLastParagraph( placeholder: Element, root: RootElement ) {
  *
  * See {@link module:core/editor/editorconfig~EditorConfig all editor configuration options}.
  */
-export interface TitleConfig {
+export interface HeadingTitleConfig {
 
 	/**
 	 * Defines a custom value of the placeholder for the title field.
 	 *
-	 * Read more in {@link module:heading/title~TitleConfig}.
+	 * Read more in {@link module:heading/title~HeadingTitleConfig}.
 	 */
 	placeholder?: string;
 }

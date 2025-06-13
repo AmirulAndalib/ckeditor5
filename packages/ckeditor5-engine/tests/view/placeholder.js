@@ -3,8 +3,6 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-/* globals console */
-
 import {
 	enablePlaceholder,
 	disablePlaceholder,
@@ -12,9 +10,9 @@ import {
 	hidePlaceholder,
 	needsPlaceholder
 } from '../../src/view/placeholder.js';
-import createViewRoot from './_utils/createroot.js';
-import View from '../../src/view/view.js';
-import ViewRange from '../../src/view/range.js';
+import { createViewRoot } from './_utils/createroot.js';
+import { View } from '../../src/view/view.js';
+import { ViewRange } from '../../src/view/range.js';
 import { setData } from '../../src/dev-utils/view.js';
 import { StylesProcessor } from '../../src/view/stylesmap.js';
 

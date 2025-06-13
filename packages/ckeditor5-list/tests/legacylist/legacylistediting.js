@@ -3,28 +3,30 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-import LegacyListEditing from '../../src/legacylist/legacylistediting.js';
-import LegacyListCommand from '../../src/legacylist/legacylistcommand.js';
-import LegacyIndentCommand from '../../src/legacylist/legacyindentcommand.js';
+/* eslint-disable @stylistic/no-multi-spaces */
 
-import ModelRange from '@ckeditor/ckeditor5-engine/src/model/range.js';
+import { LegacyListEditing } from '../../src/legacylist/legacylistediting.js';
+import { LegacyListCommand } from '../../src/legacylist/legacylistcommand.js';
+import { LegacyIndentCommand } from '../../src/legacylist/legacyindentcommand.js';
 
-import BoldEditing from '@ckeditor/ckeditor5-basic-styles/src/bold/boldediting.js';
-import UndoEditing from '@ckeditor/ckeditor5-undo/src/undoediting.js';
-import ClipboardPipeline from '@ckeditor/ckeditor5-clipboard/src/clipboardpipeline.js';
-import BlockQuoteEditing from '@ckeditor/ckeditor5-block-quote/src/blockquoteediting.js';
-import HeadingEditing from '@ckeditor/ckeditor5-heading/src/headingediting.js';
+import { ModelRange } from '@ckeditor/ckeditor5-engine/src/model/range.js';
 
-import VirtualTestEditor from '@ckeditor/ckeditor5-core/tests/_utils/virtualtesteditor.js';
+import { BoldEditing } from '@ckeditor/ckeditor5-basic-styles/src/bold/boldediting.js';
+import { UndoEditing } from '@ckeditor/ckeditor5-undo/src/undoediting.js';
+import { ClipboardPipeline } from '@ckeditor/ckeditor5-clipboard/src/clipboardpipeline.js';
+import { BlockQuoteEditing } from '@ckeditor/ckeditor5-block-quote/src/blockquoteediting.js';
+import { HeadingEditing } from '@ckeditor/ckeditor5-heading/src/headingediting.js';
+
+import { VirtualTestEditor } from '@ckeditor/ckeditor5-core/tests/_utils/virtualtesteditor.js';
 import { getData as getModelData, parse as parseModel, setData as setModelData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model.js';
 import { getData as getViewData, parse as parseView } from '@ckeditor/ckeditor5-engine/src/dev-utils/view.js';
-import IndentEditing from '@ckeditor/ckeditor5-indent/src/indentediting.js';
+import { IndentEditing } from '@ckeditor/ckeditor5-indent/src/indentediting.js';
 
 import { getCode } from '@ckeditor/ckeditor5-utils/src/keyboard.js';
-import TableEditing from '@ckeditor/ckeditor5-table/src/tableediting.js';
-import TableKeyboard from '@ckeditor/ckeditor5-table/src/tablekeyboard.js';
-import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
-import testUtils from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
+import { TableEditing } from '@ckeditor/ckeditor5-table/src/tableediting.js';
+import { TableKeyboard } from '@ckeditor/ckeditor5-table/src/tablekeyboard.js';
+import { Paragraph } from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
+import { testUtils } from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
 import { modelTable } from '@ckeditor/ckeditor5-table/tests/_utils/utils.js';
 
 describe( 'LegacyListEditing', () => {
@@ -613,7 +615,7 @@ describe( 'LegacyListEditing', () => {
 					);
 				} );
 
-				describe.skip( 'multiple blocks', () => { // Skip due to #112 issue.
+				describe.skip( 'multiple blocks (skipped due to #112)', () => { // Skip due to #112 issue.
 					testList(
 						'nested items #1',
 						'<ol><li><p>123</p><ul><li><h2>Foo</h2><p>Bar</p></li></ul><p>456</p></li></ol>',

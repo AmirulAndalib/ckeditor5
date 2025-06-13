@@ -3,17 +3,15 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-/* globals document */
-
-import Document from '@ckeditor/ckeditor5-engine/src/view/document.js';
+import { Document } from '@ckeditor/ckeditor5-engine/src/view/document.js';
 import { StylesProcessor } from '@ckeditor/ckeditor5-engine/src/view/stylesmap.js';
 import { stringify, parse } from '@ckeditor/ckeditor5-engine/src/dev-utils/view.js';
 
-import MarkdownDataProcessor from '../../../src/gfmdataprocessor.js';
+import { MarkdownGfmDataProcessor } from '../../../src/gfmdataprocessor.js';
 
 const markdownTextArea = document.getElementById( 'markdown' );
 const viewTextArea = document.getElementById( 'view' );
-const dataProcessor = new MarkdownDataProcessor( new Document( new StylesProcessor() ) );
+const dataProcessor = new MarkdownGfmDataProcessor( new Document( new StylesProcessor() ) );
 
 document.getElementById( 'button_to_view' ).addEventListener( 'click', convertToView );
 document.getElementById( 'button_to_md' ).addEventListener( 'click', convertToMarkdown );

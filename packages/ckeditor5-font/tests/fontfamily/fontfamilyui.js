@@ -3,15 +3,13 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-/* global document */
-
 import { IconFontFamily } from 'ckeditor5/src/icons.js';
-import FontFamilyEditing from '../../src/fontfamily/fontfamilyediting.js';
-import FontFamilyUI from '../../src/fontfamily/fontfamilyui.js';
+import { FontFamilyEditing } from '../../src/fontfamily/fontfamilyediting.js';
+import { FontFamilyUI } from '../../src/fontfamily/fontfamilyui.js';
 
-import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
-import ClassicTestEditor from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor.js';
-import testUtils from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
+import { Paragraph } from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
+import { ClassicTestEditor } from '@ckeditor/ckeditor5-core/tests/_utils/classictesteditor.js';
+import { testUtils } from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
 import { add as addTranslations, _clear as clearTranslations } from '@ckeditor/ckeditor5-utils/src/translation-service.js';
 import { getData as getModelData, setData as setModelData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model.js';
 
@@ -159,6 +157,50 @@ describe( 'FontFamilyUI', () => {
 					.to.deep.equal( [ true, false, false, false, false, false, false, false, false ] );
 
 				command.value = '\'Courier New\', Courier, monospace';
+
+				// The third item is 'Courier New' font family.
+				expect( listView.items.map( item => item.children.first.isOn ) )
+					.to.deep.equal( [ false, false, true, false, false, false, false, false, false ] );
+			} );
+
+			it( 'should activate the current option in the dropdown for full font family definitions even if includes spaces', () => {
+				// Make sure that list view is not created before first dropdown open.
+				expect( dropdown.listView ).to.be.undefined;
+
+				// Trigger list view creation (lazy init).
+				dropdown.isOpen = true;
+
+				const listView = dropdown.listView;
+
+				command.value = undefined;
+
+				// The first item is 'default' font family.
+				expect( listView.items.map( item => item.children.first.isOn ) )
+					.to.deep.equal( [ true, false, false, false, false, false, false, false, false ] );
+
+				command.value = 'Courier New , Courier, monospace';
+
+				// The third item is 'Courier New' font family.
+				expect( listView.items.map( item => item.children.first.isOn ) )
+					.to.deep.equal( [ false, false, true, false, false, false, false, false, false ] );
+			} );
+
+			it( 'should activate the current option in the dropdown even if only first face matches', () => {
+				// Make sure that list view is not created before first dropdown open.
+				expect( dropdown.listView ).to.be.undefined;
+
+				// Trigger list view creation (lazy init).
+				dropdown.isOpen = true;
+
+				const listView = dropdown.listView;
+
+				command.value = undefined;
+
+				// The first item is 'default' font family.
+				expect( listView.items.map( item => item.children.first.isOn ) )
+					.to.deep.equal( [ true, false, false, false, false, false, false, false, false ] );
+
+				command.value = 'Courier New';
 
 				// The third item is 'Courier New' font family.
 				expect( listView.items.map( item => item.children.first.isOn ) )

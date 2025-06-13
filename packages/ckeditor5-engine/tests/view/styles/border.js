@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-import StylesMap, { StylesProcessor } from '../../../src/view/stylesmap.js';
+import { StylesMap, StylesProcessor } from '../../../src/view/stylesmap.js';
 import { addBorderRules } from '../../../src/view/styles/border.js';
 
 describe( 'Border styles normalization', () => {
@@ -319,7 +319,7 @@ describe( 'Border styles normalization', () => {
 			);
 		} );
 
-		it( 'should output merged "border-style" property and the rest for particular borders', () => {
+		it( 'should output merged "border-color" property and the rest for particular borders', () => {
 			styles.setTo(
 				'border-top: 1px solid #aaa;' +
 				'border-right:2px dotted #aaa;' +

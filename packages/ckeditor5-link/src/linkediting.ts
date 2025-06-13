@@ -30,9 +30,9 @@ import {
 } from 'ckeditor5/src/clipboard.js';
 import { keyCodes, env } from 'ckeditor5/src/utils.js';
 
-import LinkCommand from './linkcommand.js';
-import UnlinkCommand from './unlinkcommand.js';
-import ManualDecorator from './utils/manualdecorator.js';
+import { LinkCommand } from './linkcommand.js';
+import { UnlinkCommand } from './unlinkcommand.js';
+import { LinkManualDecorator } from './utils/manualdecorator.js';
 import {
 	createLinkElement,
 	ensureSafeUrl,
@@ -57,7 +57,7 @@ const EXTERNAL_LINKS_REGEXP = /^(https?:)?\/\//;
  * It introduces the `linkHref="url"` attribute in the model which renders to the view as a `<a href="url">` element
  * as well as `'link'` and `'unlink'` commands.
  */
-export default class LinkEditing extends Plugin {
+export class LinkEditing extends Plugin {
 	/**
 	 * A list of functions that handles opening links. If any of them returns `true`, the link is considered to be opened.
 	 */
@@ -206,7 +206,7 @@ export default class LinkEditing extends Plugin {
 
 	/**
 	 * Processes an array of configured {@link module:link/linkconfig~LinkDecoratorManualDefinition manual decorators},
-	 * transforms them into {@link module:link/utils/manualdecorator~ManualDecorator} instances and stores them in the
+	 * transforms them into {@link module:link/utils/manualdecorator~LinkManualDecorator} instances and stores them in the
 	 * {@link module:link/linkcommand~LinkCommand#manualDecorators} collection (a model for manual decorators state).
 	 *
 	 * Also registers an {@link module:engine/conversion/downcasthelpers~DowncastHelpers#attributeToElement attribute-to-element}
@@ -226,7 +226,7 @@ export default class LinkEditing extends Plugin {
 			editor.model.schema.extend( '$text', { allowAttributes: decoratorDefinition.id } );
 
 			// Keeps reference to manual decorator to decode its name to attributes during downcast.
-			const decorator = new ManualDecorator( decoratorDefinition );
+			const decorator = new LinkManualDecorator( decoratorDefinition );
 
 			manualDecorators.add( decorator );
 

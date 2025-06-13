@@ -7,8 +7,6 @@
  * @module paste-from-office/filters/parse
  */
 
-/* globals DOMParser */
-
 import {
 	DomConverter,
 	ViewDocument,
@@ -23,7 +21,7 @@ import { normalizeSpacing, normalizeSpacerunSpans } from './space.js';
  *
  * @param htmlString HTML string to be parsed.
  */
-export function parseHtml( htmlString: string, stylesProcessor: StylesProcessor ): ParseHtmlResult {
+export function parsePasteOfficeHtml( htmlString: string, stylesProcessor: StylesProcessor ): PasteOfficeHtmlParseResult {
 	const domParser = new DOMParser();
 
 	// Remove Word specific "if comments" so content inside is not omitted by the parser.
@@ -58,9 +56,9 @@ export function parseHtml( htmlString: string, stylesProcessor: StylesProcessor 
 }
 
 /**
- * The result of {@link ~parseHtml}.
+ * The result of {@link ~parsePasteOfficeHtml}.
  */
-export interface ParseHtmlResult {
+export interface PasteOfficeHtmlParseResult {
 
 	/**
 	 * Parsed body content as a traversable structure.

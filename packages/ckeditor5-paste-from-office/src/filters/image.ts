@@ -7,8 +7,6 @@
  * @module paste-from-office/filters/image
  */
 
-/* globals btoa */
-
 import {
 	Matcher,
 	UpcastWriter,
@@ -23,6 +21,7 @@ import {
  *
  * @param documentFragment Document fragment on which transform images.
  * @param rtfData The RTF data from which images representation will be used.
+ * @internal
  */
 export function replaceImagesSourceWithBase64( documentFragment: ViewDocumentFragment, rtfData: string ): void {
 	if ( !documentFragment.childCount ) {
@@ -275,18 +274,18 @@ function findAllImageElementsWithLocalSource(
  */
 type ImageWithIndex = {
 
-    /**
+	/**
      * The position index of the image in the document.
      * Used to map the image to its corresponding hexadecimal representation in RTF data.
      * RTF data contains hexadecimal representations of ALL images in the document,
      * not just those with file:// URLs.
      */
-    imageIndex: number;
+	imageIndex: number;
 
-    /**
+	/**
      * The image element.
      */
-    element: ViewElement;
+	element: ViewElement;
 };
 
 /**

@@ -3,14 +3,12 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-/* globals window, console, Response, globalThis, URL */
-
-import CKEditorError from '@ckeditor/ckeditor5-utils/src/ckeditorerror.js';
+import { CKEditorError } from '@ckeditor/ckeditor5-utils/src/ckeditorerror.js';
 import { expectToThrowCKEditorError } from '@ckeditor/ckeditor5-utils/tests/_utils/utils.js';
 import { global } from '@ckeditor/ckeditor5-utils';
-import Editor from '../../src/editor/editor.js';
-import testUtils from '../../tests/_utils/utils.js';
-import generateKey from '../_utils/generatelicensekey.js';
+import { Editor } from '../../src/editor/editor.js';
+import { testUtils } from '../../tests/_utils/utils.js';
+import { generateLicenseKey } from '../_utils/generatelicensekey.js';
 import { getEditorUsageData } from '../../src/editor/utils/editorusagedata.js';
 
 class TestEditor extends Editor {
@@ -48,7 +46,7 @@ describe( 'Editor - license check', () => {
 
 		describe( 'required fields in the license key', () => {
 			it( 'should not block the editor when required fields are provided and are valid', () => {
-				const { licenseKey } = generateKey();
+				const { licenseKey } = generateLicenseKey();
 
 				const editor = new TestEditor( { licenseKey } );
 
@@ -57,7 +55,7 @@ describe( 'Editor - license check', () => {
 			} );
 
 			it( 'should block the editor when the `exp` field is missing', () => {
-				const { licenseKey } = generateKey( { expExist: false } );
+				const { licenseKey } = generateLicenseKey( { expExist: false } );
 
 				const editor = new TestEditor( { licenseKey } );
 
@@ -66,7 +64,7 @@ describe( 'Editor - license check', () => {
 			} );
 
 			it( 'should block the editor when the `jti` field is missing', () => {
-				const { licenseKey } = generateKey( { jtiExist: false } );
+				const { licenseKey } = generateLicenseKey( { jtiExist: false } );
 
 				const editor = new TestEditor( { licenseKey } );
 
@@ -75,7 +73,7 @@ describe( 'Editor - license check', () => {
 			} );
 
 			it( 'should block the editor when the `vc` field is missing', () => {
-				const { licenseKey } = generateKey( { vcExist: false } );
+				const { licenseKey } = generateLicenseKey( { vcExist: false } );
 
 				const editor = new TestEditor( { licenseKey } );
 
@@ -171,7 +169,7 @@ describe( 'Editor - license check', () => {
 				it( `works on ${ set.name }`, () => {
 					sinon.stub( URL.prototype, 'hostname' ).value( set.hostname );
 
-					const { licenseKey } = generateKey( { licensedHosts: [ set.licensedHost ] } );
+					const { licenseKey } = generateLicenseKey( { licensedHosts: [ set.licensedHost ] } );
 					const editor = new TestEditor( { licenseKey } );
 
 					sinon.assert.notCalled( showErrorStub );
@@ -184,7 +182,7 @@ describe( 'Editor - license check', () => {
 				it( `fails on ${ set.name }`, () => {
 					sinon.stub( URL.prototype, 'hostname' ).value( set.hostname );
 
-					const { licenseKey } = generateKey( { licensedHosts: [ set.licensedHost ] } );
+					const { licenseKey } = generateLicenseKey( { licensedHosts: [ set.licensedHost ] } );
 					const editor = new TestEditor( { licenseKey } );
 
 					sinon.assert.calledWithMatch( showErrorStub, 'domainLimit' );
@@ -202,7 +200,7 @@ describe( 'Editor - license check', () => {
 			it( 'should not block if distribution channel match', () => {
 				setChannel( 'xyz' );
 
-				const { licenseKey } = generateKey( { distributionChannel: 'xyz' } );
+				const { licenseKey } = generateLicenseKey( { distributionChannel: 'xyz' } );
 
 				const editor = new TestEditor( { licenseKey } );
 
@@ -213,7 +211,7 @@ describe( 'Editor - license check', () => {
 			it( 'should not block if one of distribution channel match', () => {
 				setChannel( 'xyz' );
 
-				const { licenseKey } = generateKey( { distributionChannel: [ 'abc', 'xyz' ] } );
+				const { licenseKey } = generateLicenseKey( { distributionChannel: [ 'abc', 'xyz' ] } );
 
 				const editor = new TestEditor( { licenseKey } );
 
@@ -222,7 +220,7 @@ describe( 'Editor - license check', () => {
 			} );
 
 			it( 'should not block if implicit distribution channel match', () => {
-				const { licenseKey } = generateKey( { distributionChannel: 'sh' } );
+				const { licenseKey } = generateLicenseKey( { distributionChannel: 'sh' } );
 
 				const editor = new TestEditor( { licenseKey } );
 
@@ -233,7 +231,7 @@ describe( 'Editor - license check', () => {
 			it( 'should not block if distribution channel is not restricted', () => {
 				setChannel( 'xyz' );
 
-				const { licenseKey } = generateKey();
+				const { licenseKey } = generateLicenseKey();
 
 				const editor = new TestEditor( { licenseKey } );
 
@@ -244,7 +242,7 @@ describe( 'Editor - license check', () => {
 			it( 'should block if distribution channel doesn\'t match', () => {
 				setChannel( 'abc' );
 
-				const { licenseKey } = generateKey( { distributionChannel: 'xyz' } );
+				const { licenseKey } = generateLicenseKey( { distributionChannel: 'xyz' } );
 
 				const editor = new TestEditor( { licenseKey } );
 
@@ -255,7 +253,7 @@ describe( 'Editor - license check', () => {
 			it( 'should block if none of distribution channel doesn\'t match', () => {
 				setChannel( 'abc' );
 
-				const { licenseKey } = generateKey( { distributionChannel: [ 'xyz', 'def' ] } );
+				const { licenseKey } = generateLicenseKey( { distributionChannel: [ 'xyz', 'def' ] } );
 
 				const editor = new TestEditor( { licenseKey } );
 
@@ -264,7 +262,7 @@ describe( 'Editor - license check', () => {
 			} );
 
 			it( 'should block if implicit distribution channel doesn\'t match', () => {
-				const { licenseKey } = generateKey( { distributionChannel: 'xyz' } );
+				const { licenseKey } = generateLicenseKey( { distributionChannel: 'xyz' } );
 
 				const editor = new TestEditor( { licenseKey } );
 
@@ -340,10 +338,8 @@ describe( 'Editor - license check', () => {
 			} );
 
 			licenseTypes.forEach( licenseType => {
-				const licenseTypeCapitalized = licenseType[ 0 ].toUpperCase() + licenseType.slice( 1 );
-
 				it( `should not block if ${ licenseType } license did not expired`, () => {
-					const { licenseKey, todayTimestamp } = generateKey( {
+					const { licenseKey, todayTimestamp } = generateLicenseKey( {
 						licenseType,
 						isExpired: false,
 						daysAfterExpiration: -1
@@ -361,7 +357,7 @@ describe( 'Editor - license check', () => {
 				} );
 
 				it( `should block if ${ licenseType } license is expired`, () => {
-					const { licenseKey, todayTimestamp } = generateKey( {
+					const { licenseKey, todayTimestamp } = generateLicenseKey( {
 						licenseType,
 						daysAfterExpiration: 1
 					} );
@@ -377,7 +373,7 @@ describe( 'Editor - license check', () => {
 				} );
 
 				it( `should block editor after 10 minutes on ${ licenseType } license`, () => {
-					const { licenseKey, todayTimestamp } = generateKey( {
+					const { licenseKey, todayTimestamp } = generateLicenseKey( {
 						licenseType,
 						isExpired: false,
 						daysAfterExpiration: -1
@@ -399,7 +395,7 @@ describe( 'Editor - license check', () => {
 				} );
 
 				it( `should clear timer on editor destroy on ${ licenseType } license`, done => {
-					const { licenseKey, todayTimestamp } = generateKey( {
+					const { licenseKey, todayTimestamp } = generateLicenseKey( {
 						licenseType,
 						isExpired: false,
 						daysAfterExpiration: -1
@@ -419,45 +415,90 @@ describe( 'Editor - license check', () => {
 					dateNow.restore();
 				} );
 
-				it( `should show the warning about ${ licenseType } license only once per browser session`, () => {
-					const { licenseKey, todayTimestamp } = generateKey( {
+				it( `should log information to the console about using the ${ licenseType } license`, () => {
+					const { licenseKey, todayTimestamp } = generateLicenseKey( {
 						licenseType
 					} );
 
 					const dateNow = sinon.stub( Date, 'now' ).returns( todayTimestamp );
-					const editor1 = new TestEditor( { licenseKey } );
 
-					expect( editor1.isReadOnly ).to.be.false;
+					// Simulate hard reload.
+					global.window.CKEDITOR_WARNING_SUPPRESSIONS = undefined;
 
-					// Session was already started in the previous test.
-					sinon.assert.notCalled( consoleInfoStub );
-					sinon.assert.notCalled( consoleWarnStub );
-
-					// Clear sessionStorage to simulate a new session.
-					global.window.sessionStorage.clear();
-
-					const editor2 = new TestEditor( { licenseKey } );
-					expect( editor2.isReadOnly ).to.be.false;
+					const editor = new TestEditor( { licenseKey } );
+					expect( editor.isReadOnly ).to.be.false;
 
 					sinon.assert.calledOnce( consoleInfoStub );
-					sinon.assert.calledWith(
-						consoleInfoStub,
-						`%cCKEditor 5 ${ licenseTypeCapitalized } License`,
-						'color: #ffffff; background: #743CCD; font-size: 14px; padding: 4px 8px; border-radius: 4px;'
-					);
-
-					const article = licenseType === 'evaluation' ? 'an' : 'a';
-
 					sinon.assert.calledOnce( consoleWarnStub );
-					sinon.assert.calledWith(
-						consoleWarnStub,
-						`⚠️ You are using ${ article } ${ licenseType } license of CKEditor 5` +
-						`${ licenseType === 'trial' ? ' which is for evaluation purposes only' : '' }. ` +
-						'For production usage, please obtain a production license at https://portal.ckeditor.com/'
-					);
+
+					assertConsoleMessages( consoleInfoStub, consoleWarnStub, licenseType );
 
 					dateNow.restore();
 				} );
+
+				it( `should log information to the console about using the ${ licenseType } license only once`, () => {
+					const { licenseKey, todayTimestamp } = generateLicenseKey( {
+						licenseType
+					} );
+
+					const dateNow = sinon.stub( Date, 'now' ).returns( todayTimestamp );
+
+					// Simulate hard reload.
+					global.window.CKEDITOR_WARNING_SUPPRESSIONS = undefined;
+
+					// eslint-disable-next-line no-new
+					new TestEditor( { licenseKey } );
+
+					sinon.assert.calledOnce( consoleInfoStub );
+					sinon.assert.calledOnce( consoleWarnStub );
+
+					assertConsoleMessages( consoleInfoStub, consoleWarnStub, licenseType );
+
+					// Use the same license type for the second editor to check if the message is shown only once.
+
+					// eslint-disable-next-line no-new
+					new TestEditor( { licenseKey } );
+
+					sinon.assert.calledOnce( consoleInfoStub );
+					sinon.assert.calledOnce( consoleWarnStub );
+
+					dateNow.restore();
+				} );
+			} );
+
+			it( 'should log information to the console twice when using two different license types', () => {
+				const trialLicense = generateLicenseKey( {
+					licenseType: 'trial'
+				} );
+
+				const evaluationLicense = generateLicenseKey( {
+					licenseType: 'evaluation'
+				} );
+
+				const dateNow = sinon.stub( Date, 'now' ).returns( trialLicense.licenseKeyTimestamp );
+
+				// Simulate hard reload.
+				global.window.CKEDITOR_WARNING_SUPPRESSIONS = undefined;
+
+				// eslint-disable-next-line no-new
+				new TestEditor( { licenseKey: trialLicense.licenseKey } );
+
+				sinon.assert.calledOnce( consoleInfoStub );
+				sinon.assert.calledOnce( consoleWarnStub );
+
+				assertConsoleMessages( consoleInfoStub, consoleWarnStub, 'trial' );
+
+				// Use a different license type for the second editor to check if the message is shown twice.
+
+				// eslint-disable-next-line no-new
+				new TestEditor( { licenseKey: evaluationLicense.licenseKey } );
+
+				sinon.assert.calledTwice( consoleInfoStub );
+				sinon.assert.calledTwice( consoleWarnStub );
+
+				assertConsoleMessages( consoleInfoStub, consoleWarnStub, 'evaluation' );
+
+				dateNow.restore();
 			} );
 		} );
 
@@ -471,70 +512,50 @@ describe( 'Editor - license check', () => {
 			} );
 
 			it( 'should log information to the console about using the development license', () => {
-				const { licenseKey } = generateKey( {
+				const { licenseKey } = generateLicenseKey( {
 					licenseType: 'development'
 				} );
 
-				// Clear sessionStorage to simulate a new session and show the warning.
-				global.window.sessionStorage.clear();
+				// Simulate hard reload.
+				global.window.CKEDITOR_WARNING_SUPPRESSIONS = undefined;
 
 				const editor = new TestEditor( { licenseKey } );
 
 				expect( editor.isReadOnly ).to.be.false;
 
-				// Verify console.info call with new format
 				sinon.assert.calledOnce( consoleInfoStub );
-				sinon.assert.calledWith(
-					consoleInfoStub,
-					'%cCKEditor 5 Development License',
-					'color: #ffffff; background: #743CCD; font-size: 14px; padding: 4px 8px; border-radius: 4px;'
-				);
-
-				// Verify console.warn call with the warning message
 				sinon.assert.calledOnce( consoleWarnStub );
 
-				sinon.assert.calledWith(
-					consoleWarnStub,
-					'⚠️ You are using a development license of CKEditor 5. ' +
-					'For production usage, please obtain a production license at https://portal.ckeditor.com/'
-				);
+				assertConsoleMessages( consoleInfoStub, consoleWarnStub, 'development' );
 			} );
 
-			it( 'should show the warning only once per browser session', () => {
-				const { licenseKey } = generateKey( {
+			it( 'should show the warning only once for development license', () => {
+				const { licenseKey } = generateLicenseKey( {
 					licenseType: 'development'
 				} );
 
-				const editor1 = new TestEditor( { licenseKey } );
-				expect( editor1.isReadOnly ).to.be.false;
+				// Simulate hard reload.
+				global.window.CKEDITOR_WARNING_SUPPRESSIONS = undefined;
 
-				// Session was already started in the previous test.
-				sinon.assert.notCalled( consoleInfoStub );
-				sinon.assert.notCalled( consoleWarnStub );
-
-				// Clear sessionStorage to simulate a new session.
-				global.window.sessionStorage.clear();
-
-				const editor2 = new TestEditor( { licenseKey } );
-				expect( editor2.isReadOnly ).to.be.false;
+				// eslint-disable-next-line no-new
+				new TestEditor( { licenseKey } );
 
 				sinon.assert.calledOnce( consoleInfoStub );
-				sinon.assert.calledWith(
-					consoleInfoStub,
-					'%cCKEditor 5 Development License',
-					'color: #ffffff; background: #743CCD; font-size: 14px; padding: 4px 8px; border-radius: 4px;'
-				);
-
 				sinon.assert.calledOnce( consoleWarnStub );
-				sinon.assert.calledWith(
-					consoleWarnStub,
-					'⚠️ You are using a development license of CKEditor 5. ' +
-					'For production usage, please obtain a production license at https://portal.ckeditor.com/'
-				);
+
+				assertConsoleMessages( consoleInfoStub, consoleWarnStub, 'development' );
+
+				// Use the same license type for the second editor to check if the message is shown only once.
+
+				// eslint-disable-next-line no-new
+				new TestEditor( { licenseKey } );
+
+				sinon.assert.calledOnce( consoleInfoStub );
+				sinon.assert.calledOnce( consoleWarnStub );
 			} );
 
 			it( 'should not block the editor if 10 minutes have not passed (development license)', () => {
-				const { licenseKey } = generateKey( {
+				const { licenseKey } = generateLicenseKey( {
 					licenseType: 'development'
 				} );
 
@@ -555,7 +576,7 @@ describe( 'Editor - license check', () => {
 			} );
 
 			it( 'should not block editor after 10 minutes (development license)', () => {
-				const { licenseKey, todayTimestamp } = generateKey( {
+				const { licenseKey, todayTimestamp } = generateLicenseKey( {
 					licenseType: 'development'
 				} );
 
@@ -575,7 +596,7 @@ describe( 'Editor - license check', () => {
 			} );
 
 			it( 'should not interact with timers', done => {
-				const { licenseKey, todayTimestamp } = generateKey( {
+				const { licenseKey, todayTimestamp } = generateLicenseKey( {
 					licenseType: 'development'
 				} );
 
@@ -595,7 +616,7 @@ describe( 'Editor - license check', () => {
 		} );
 
 		it( 'should block the editor when the license key is not valid (expiration date in the past)', () => {
-			const { licenseKey } = generateKey( {
+			const { licenseKey } = generateLicenseKey( {
 				isExpired: true
 			} );
 
@@ -606,7 +627,7 @@ describe( 'Editor - license check', () => {
 		} );
 
 		it( 'should block the editor when the license key has wrong format (wrong verificationCode)', () => {
-			const { licenseKey } = generateKey( {
+			const { licenseKey } = generateLicenseKey( {
 				customVc: 'wrong vc'
 			} );
 
@@ -617,7 +638,7 @@ describe( 'Editor - license check', () => {
 		} );
 
 		it( 'should block the editor when the license key has wrong format (missing header part)', () => {
-			const { licenseKey } = generateKey( {
+			const { licenseKey } = generateLicenseKey( {
 				isExpired: true,
 				skipHeader: true
 			} );
@@ -629,7 +650,7 @@ describe( 'Editor - license check', () => {
 		} );
 
 		it( 'should block the editor when the license key has wrong format (missing tail part)', () => {
-			const { licenseKey } = generateKey( {
+			const { licenseKey } = generateLicenseKey( {
 				isExpired: true,
 				skipTail: true
 			} );
@@ -663,7 +684,7 @@ describe( 'Editor - license check', () => {
 		it( 'should send request with telemetry data if license key contains a usage endpoint', () => {
 			const fetchStub = sinon.stub( window, 'fetch' );
 
-			const { licenseKey } = generateKey( {
+			const { licenseKey } = generateLicenseKey( {
 				usageEndpoint: 'https://ckeditor.com'
 			} );
 			const editor = new TestEditor( { licenseKey } );
@@ -685,7 +706,7 @@ describe( 'Editor - license check', () => {
 		it( 'should not send any request if license key does not contain a usage endpoint', () => {
 			const fetchStub = sinon.stub( window, 'fetch' );
 
-			const { licenseKey } = generateKey();
+			const { licenseKey } = generateLicenseKey();
 			const editor = new TestEditor( { licenseKey } );
 
 			editor.fire( 'ready' );
@@ -694,7 +715,7 @@ describe( 'Editor - license check', () => {
 		} );
 
 		it( 'should display error on the console and not block the editor if response status is not ok (HTTP 500)', async () => {
-			const { licenseKey } = generateKey( {
+			const { licenseKey } = generateLicenseKey( {
 				usageEndpoint: 'https://ckeditor.com'
 			} );
 			const fetchStub = sinon.stub( window, 'fetch' ).resolves( new Response( null, { status: 500 } ) );
@@ -720,7 +741,7 @@ describe( 'Editor - license check', () => {
 			} );
 			const showErrorStub = testUtils.sinon.stub( TestEditor.prototype, '_showLicenseError' );
 
-			const { licenseKey } = generateKey( {
+			const { licenseKey } = generateLicenseKey( {
 				usageEndpoint: 'https://ckeditor.com'
 			} );
 			const editor = new TestEditor( { licenseKey } );
@@ -745,7 +766,7 @@ describe( 'Editor - license check', () => {
 			const warnStub = testUtils.sinon.stub( console, 'warn' );
 			const showErrorStub = testUtils.sinon.stub( TestEditor.prototype, '_showLicenseError' );
 
-			const { licenseKey } = generateKey( {
+			const { licenseKey } = generateLicenseKey( {
 				usageEndpoint: 'https://ckeditor.com'
 			} );
 			const editor = new TestEditor( { licenseKey } );
@@ -801,7 +822,7 @@ describe( 'Editor - license check', () => {
 
 			try {
 				clock.tick( 1 );
-			} catch ( e ) {
+			} catch {
 				// Do nothing.
 			}
 
@@ -815,7 +836,7 @@ describe( 'Editor - license check', () => {
 		let editor, sendUsageRequestStub;
 
 		beforeEach( () => {
-			const { licenseKey } = generateKey( {
+			const { licenseKey } = generateLicenseKey( {
 				usageEndpoint: 'https://ckeditor.com'
 			} );
 
@@ -938,6 +959,39 @@ describe( 'Editor - license check', () => {
 		} );
 	} );
 } );
+
+function assertConsoleMessages( consoleInfoStub, consoleWarnStub, licenseType ) {
+	if ( licenseType === 'development' ) {
+		sinon.assert.calledWith(
+			consoleInfoStub,
+			'%cCKEditor 5 Development License',
+			'color: #ffffff; background: #743CCD; font-size: 14px; padding: 4px 8px; border-radius: 4px;'
+		);
+
+		sinon.assert.calledWith(
+			consoleWarnStub,
+			'⚠️ You are using a development license of CKEditor 5. ' +
+			'For production usage, please obtain a production license at https://portal.ckeditor.com/'
+		);
+	} else if ( [ 'trial', 'evaluation' ].includes( licenseType ) ) {
+		const licenseTypeCapitalized = licenseType[ 0 ].toUpperCase() + licenseType.slice( 1 );
+
+		sinon.assert.calledWith(
+			consoleInfoStub,
+			`%cCKEditor 5 ${ licenseTypeCapitalized } License`,
+			'color: #ffffff; background: #743CCD; font-size: 14px; padding: 4px 8px; border-radius: 4px;'
+		);
+
+		const article = licenseType === 'evaluation' ? 'an' : 'a';
+
+		sinon.assert.calledWith(
+			consoleWarnStub,
+			`⚠️ You are using ${ article } ${ licenseType } license of CKEditor 5` +
+			`${ licenseType === 'trial' ? ' which is for evaluation purposes only' : '' }. ` +
+			'For production usage, please obtain a production license at https://portal.ckeditor.com/'
+		);
+	}
+}
 
 function wait( time ) {
 	return new Promise( res => {

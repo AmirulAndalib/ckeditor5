@@ -3,14 +3,14 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-import DeleteCommand from '../src/deletecommand.js';
-import Delete from '../src/delete.js';
-import ChangeBuffer from '../src/utils/changebuffer.js';
+import { DeleteCommand } from '../src/deletecommand.js';
+import { Delete } from '../src/delete.js';
+import { TypingChangeBuffer } from '../src/utils/changebuffer.js';
 
-import ParagraphCommand from '@ckeditor/ckeditor5-paragraph/src/paragraphcommand.js';
-import VirtualTestEditor from '@ckeditor/ckeditor5-core/tests/_utils/virtualtesteditor.js';
-import ModelTestEditor from '@ckeditor/ckeditor5-core/tests/_utils/modeltesteditor.js';
-import testUtils from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
+import { ParagraphCommand } from '@ckeditor/ckeditor5-paragraph/src/paragraphcommand.js';
+import { VirtualTestEditor } from '@ckeditor/ckeditor5-core/tests/_utils/virtualtesteditor.js';
+import { ModelTestEditor } from '@ckeditor/ckeditor5-core/tests/_utils/modeltesteditor.js';
+import { testUtils } from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
 
 import { getData, setData } from '@ckeditor/ckeditor5-engine/src/dev-utils/model.js';
 
@@ -48,7 +48,7 @@ describe( 'DeleteCommand', () => {
 
 	describe( 'buffer', () => {
 		it( 'has buffer getter', () => {
-			expect( editor.commands.get( 'delete' ).buffer ).to.be.an.instanceof( ChangeBuffer );
+			expect( editor.commands.get( 'delete' ).buffer ).to.be.an.instanceof( TypingChangeBuffer );
 		} );
 
 		it( 'has a buffer limit configured to default value of 20', () => {

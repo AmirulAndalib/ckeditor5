@@ -26,8 +26,8 @@ import { ClipboardPipeline, type ViewDocumentClipboardInputEvent } from 'ckedito
 import { FileRepository, type UploadResponse, type FileLoader } from 'ckeditor5/src/upload.js';
 import { env } from 'ckeditor5/src/utils.js';
 
-import ImageUtils from '../imageutils.js';
-import UploadImageCommand from './uploadimagecommand.js';
+import { ImageUtils } from '../imageutils.js';
+import { UploadImageCommand } from './uploadimagecommand.js';
 import { fetchLocalImage, isLocalImage } from '../../src/imageupload/utils.js';
 import { createImageTypeRegExp } from './utils.js';
 
@@ -38,7 +38,7 @@ import { createImageTypeRegExp } from './utils.js';
  * When an image is uploaded, it fires the {@link ~ImageUploadEditing#event:uploadComplete `uploadComplete`} event
  * that allows adding custom attributes to the {@link module:engine/model/element~Element image element}.
  */
-export default class ImageUploadEditing extends Plugin {
+export class ImageUploadEditing extends Plugin {
 	/**
 	 * @inheritDoc
 	 */
@@ -154,7 +154,7 @@ export default class ImageUploadEditing extends Plugin {
 		this.listenTo<ViewDocumentClipboardInputEvent>( editor.editing.view.document, 'clipboardInput', ( evt, data ) => {
 			// Skip if non empty HTML data is included.
 			// https://github.com/ckeditor/ckeditor5-upload/issues/68
-			if ( isHtmlIncluded( data.dataTransfer ) ) {
+			if ( isHtmlInDataTransfer( data.dataTransfer ) ) {
 				return;
 			}
 
@@ -188,7 +188,6 @@ export default class ImageUploadEditing extends Plugin {
 				const notification: Notification = editor.plugins.get( 'Notification' );
 				const t = editor.locale.t;
 
-				// eslint-disable-next-line max-len
 				notification.showWarning( t( 'You have no image upload permissions.' ), {
 					namespace: 'image'
 				} );
@@ -575,7 +574,7 @@ export default class ImageUploadEditing extends Plugin {
 /**
  * Returns `true` if non-empty `text/html` is included in the data transfer.
  */
-export function isHtmlIncluded( dataTransfer: DataTransfer ): boolean {
+export function isHtmlInDataTransfer( dataTransfer: DataTransfer ): boolean {
 	return Array.from( dataTransfer.types ).includes( 'text/html' ) && dataTransfer.getData( 'text/html' ) !== '';
 }
 

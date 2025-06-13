@@ -7,18 +7,16 @@
  * @module engine/view/observer/selectionobserver
  */
 
-/* global setInterval, clearInterval */
-
-import Observer from './observer.js';
-import MutationObserver from './mutationobserver.js';
-import FocusObserver from './focusobserver.js';
+import { Observer } from './observer.js';
+import { MutationObserver } from './mutationobserver.js';
+import { FocusObserver } from './focusobserver.js';
 import { env, type ObservableChangeEvent } from '@ckeditor/ckeditor5-utils';
 import { debounce, type DebouncedFunction } from 'es-toolkit/compat';
 
-import type View from '../view.js';
-import type DocumentSelection from '../documentselection.js';
-import type DomConverter from '../domconverter.js';
-import type Selection from '../selection.js';
+import { type View } from '../view.js';
+import { type DocumentSelection } from '../documentselection.js';
+import { type DomConverter } from '../domconverter.js';
+import { type Selection } from '../selection.js';
 import type { ViewDocumentCompositionStartEvent } from './compositionobserver.js';
 
 // @if CK_DEBUG_TYPING // const { _debouncedLine, _buildLogMessage } = require( '../../dev-utils/utils.js' );
@@ -35,7 +33,7 @@ type DomSelection = globalThis.Selection;
  *
  * Note that this observer is attached by the {@link module:engine/view/view~View} and is available by default.
  */
-export default class SelectionObserver extends Observer {
+export class SelectionObserver extends Observer {
 	/**
 	 * Instance of the mutation observer. Selection observer calls
 	 * {@link module:engine/view/observer/mutationobserver~MutationObserver#flush} to ensure that the mutations will be handled
@@ -303,8 +301,9 @@ export default class SelectionObserver extends Observer {
 		// Mark the latest focus change as complete (we got new selection after the focus so the selection is in the focused element).
 		this.focusObserver.flush();
 
-		// Ignore selection change as the editable is not focused.
-		if ( !this.view.document.isFocused ) {
+		// Ignore selection change as the editable is not focused. Note that in read-only mode, we have to update
+		// the model selection as there won't be any focus change to flush the pending selection changes.
+		if ( !this.view.document.isFocused && !this.view.document.isReadOnly ) {
 			// @if CK_DEBUG_TYPING // if ( ( window as any ).logCKETyping ) {
 			// @if CK_DEBUG_TYPING // 	console.info( ..._buildLogMessage( this, 'SelectionObserver',
 			// @if CK_DEBUG_TYPING // 		'Ignore selection change while editable is not focused'

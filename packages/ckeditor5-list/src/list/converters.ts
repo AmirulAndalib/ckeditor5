@@ -47,11 +47,11 @@ import {
 	isListItemView
 } from './utils/view.js';
 
-import ListWalker, { SiblingListBlocksIterator } from './utils/listwalker.js';
+import { ListWalker, SiblingListBlocksIterator } from './utils/listwalker.js';
 import { findAndAddListHeadToMap } from './utils/postfixers.js';
 
 import type {
-	default as ListEditing,
+	ListEditing,
 	ListEditingCheckAttributesEvent,
 	ListEditingCheckElementEvent,
 	ListItemAttributesMap,
@@ -78,7 +78,10 @@ export function listItemUpcastConverter(): GetCallback<UpcastElementEvent> {
 			return;
 		}
 
-		const listItemId = ListItemUid.next();
+		const listItemId = data.viewItem.getAttribute( 'data-list-item-id' ) || ListItemUid.next();
+
+		conversionApi.consumable.consume( data.viewItem, { attributes: 'data-list-item-id' } );
+
 		const listIndent = getIndent( data.viewItem );
 		let listType = data.viewItem.parent && data.viewItem.parent.is( 'element', 'ol' ) ? 'numbered' : 'bulleted';
 
@@ -360,12 +363,14 @@ export function listItemDowncastConverter(
 		const viewRange = insertCustomMarkerElements( listItem, viewElement, strategies, writer, { dataPipeline } );
 
 		// Then wrap them with the new list wrappers (UL, OL, LI).
-		wrapListItemBlock( listItem, viewRange, strategies, writer );
+		wrapListItemBlock( listItem, viewRange, strategies, writer, conversionApi.options );
 	};
 }
 
 /**
  * The 'remove' downcast converter for custom markers.
+ *
+ * @internal
  */
 export function listItemDowncastRemoveConverter( schema: Schema ): GetCallback<DowncastRemoveEvent> {
 	return ( evt, data, conversionApi ) => {
@@ -448,6 +453,8 @@ export function findMappedViewElement( element: Element, mapper: Mapper, model: 
 
 /**
  * The model to view custom position mapping for cases when marker is injected at the beginning of a block.
+ *
+ * @internal
  */
 export function createModelToViewPositionMapper(
 	strategies: Array<DowncastStrategy>,
@@ -622,7 +629,8 @@ function wrapListItemBlock(
 	listItem: ListElement,
 	viewRange: ViewRange,
 	strategies: Array<DowncastStrategy>,
-	writer: DowncastWriter
+	writer: DowncastWriter,
+	options?: Record<string, unknown>
 ) {
 	if ( !listItem.hasAttribute( 'listIndent' ) ) {
 		return;
@@ -643,7 +651,8 @@ function wrapListItemBlock(
 				strategy.setAttributeOnDowncast(
 					writer,
 					currentListItem.getAttribute( strategy.attributeName ),
-					strategy.scope == 'list' ? listViewElement : listItemViewElement
+					strategy.scope == 'list' ? listViewElement : listItemViewElement,
+					options
 				);
 			}
 		}

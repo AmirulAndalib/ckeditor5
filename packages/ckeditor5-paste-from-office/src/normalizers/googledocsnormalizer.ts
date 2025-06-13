@@ -9,17 +9,19 @@
 
 import { UpcastWriter, type ViewDocument } from 'ckeditor5/src/engine.js';
 
-import removeBoldWrapper from '../filters/removeboldwrapper.js';
-import transformBlockBrsToParagraphs from '../filters/br.js';
+import { removeBoldWrapper } from '../filters/removeboldwrapper.js';
+import { transformBlockBrsToParagraphs } from '../filters/br.js';
 import { unwrapParagraphInListItem } from '../filters/list.js';
-import type { Normalizer, NormalizerData } from '../normalizer.js';
+import type { PasteFromOfficeNormalizer, PasteFromOfficeNormalizerData } from '../normalizer.js';
 
 const googleDocsMatch = /id=("|')docs-internal-guid-[-0-9a-f]+("|')/i;
 
 /**
  * Normalizer for the content pasted from Google Docs.
+ *
+ * @internal
  */
-export default class GoogleDocsNormalizer implements Normalizer {
+export class GoogleDocsNormalizer implements PasteFromOfficeNormalizer {
 	public readonly document: ViewDocument;
 
 	/**
@@ -41,7 +43,7 @@ export default class GoogleDocsNormalizer implements Normalizer {
 	/**
 	 * @inheritDoc
 	 */
-	public execute( data: NormalizerData ): void {
+	public execute( data: PasteFromOfficeNormalizerData ): void {
 		const writer = new UpcastWriter( this.document );
 		const { body: documentFragment } = data._parsedData;
 
