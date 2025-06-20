@@ -3,21 +3,19 @@
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-licensing-options
  */
 
-/* globals setTimeout, document, console, Event */
+import { testUtils } from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
 
-import testUtils from '@ckeditor/ckeditor5-core/tests/_utils/utils.js';
-
-import ViewRange from '../../../src/view/range.js';
-import DocumentSelection from '../../../src/view/documentselection.js';
-import ViewSelection from '../../../src/view/selection.js';
-import View from '../../../src/view/view.js';
-import SelectionObserver from '../../../src/view/observer/selectionobserver.js';
-import FocusObserver from '../../../src/view/observer/focusobserver.js';
-import MutationObserver from '../../../src/view/observer/mutationobserver.js';
-import createViewRoot from '../_utils/createroot.js';
-import { parse } from '../../../src/dev-utils/view.js';
+import { ViewRange } from '../../../src/view/range.js';
+import { ViewDocumentSelection } from '../../../src/view/documentselection.js';
+import { ViewSelection } from '../../../src/view/selection.js';
+import { EditingView } from '../../../src/view/view.js';
+import { SelectionObserver } from '../../../src/view/observer/selectionobserver.js';
+import { FocusObserver } from '../../../src/view/observer/focusobserver.js';
+import { MutationObserver } from '../../../src/view/observer/mutationobserver.js';
+import { createViewRoot } from '../_utils/createroot.js';
+import { _parseView } from '../../../src/dev-utils/view.js';
 import { StylesProcessor } from '../../../src/view/stylesmap.js';
-import env from '@ckeditor/ckeditor5-utils/src/env.js';
+import { env } from '@ckeditor/ckeditor5-utils/src/env.js';
 import { priorities } from '@ckeditor/ckeditor5-utils';
 
 describe( 'SelectionObserver', () => {
@@ -31,7 +29,7 @@ describe( 'SelectionObserver', () => {
 		domRoot.innerHTML = '<div contenteditable="true"></div><div contenteditable="true" id="additional"></div>';
 		domMain = domRoot.childNodes[ 0 ];
 		domDocument.body.appendChild( domRoot );
-		view = new View( new StylesProcessor() );
+		view = new EditingView( new StylesProcessor() );
 		viewDocument = view.document;
 		createViewRoot( viewDocument );
 		view.attachDomRoot( domMain );
@@ -41,7 +39,7 @@ describe( 'SelectionObserver', () => {
 		viewRoot = viewDocument.getRoot();
 
 		view.change( writer => {
-			viewRoot._appendChild( parse(
+			viewRoot._appendChild( _parseView(
 				'<container:p>xxx<ui:span></ui:span></container:p>' +
 				'<container:p>yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy</container:p>' ) );
 
@@ -72,7 +70,7 @@ describe( 'SelectionObserver', () => {
 		viewDocument.on( 'selectionChange', ( evt, data ) => {
 			expect( data ).to.have.property( 'domSelection' ).that.equals( domDocument.getSelection() );
 
-			expect( data ).to.have.property( 'oldSelection' ).that.is.instanceof( DocumentSelection );
+			expect( data ).to.have.property( 'oldSelection' ).that.is.instanceof( ViewDocumentSelection );
 			expect( data.oldSelection.rangeCount ).to.equal( 0 );
 
 			expect( data ).to.have.property( 'newSelection' ).that.is.instanceof( ViewSelection );
@@ -125,7 +123,7 @@ describe( 'SelectionObserver', () => {
 
 	it( 'should not fire selectionChange while editable is not focused', done => {
 		viewDocument.on( 'selectionChange', () => {
-			throw 'selectionChange fired while editable is not focused';
+			throw new Error( 'selectionChange fired while editable is not focused' );
 		} );
 
 		viewDocument.isFocused = false;
@@ -145,9 +143,25 @@ describe( 'SelectionObserver', () => {
 		}, 100 );
 	} );
 
+	// See https://github.com/ckeditor/ckeditor5/issues/18514.
+	it( 'should fire selectionChange while editable is not focused but the editor is in read-only mode', done => {
+		const spy = sinon.spy();
+
+		viewDocument.on( 'selectionChange', spy );
+
+		viewDocument.isReadOnly = true;
+		viewDocument.isFocused = false;
+		changeDomSelection();
+
+		setTimeout( () => {
+			expect( spy.calledOnce ).to.be.true;
+			done();
+		}, 100 );
+	} );
+
 	it( 'should not fire selectionChange while user is composing', done => {
 		viewDocument.on( 'selectionChange', () => {
-			throw 'selectionChange fired while composing';
+			throw new Error( 'selectionChange fired while composing' );
 		} );
 
 		viewDocument.isComposing = true;
@@ -164,7 +178,7 @@ describe( 'SelectionObserver', () => {
 		viewDocument.on( 'selectionChange', ( evt, data ) => {
 			expect( data ).to.have.property( 'domSelection' ).that.equals( domDocument.getSelection() );
 
-			expect( data ).to.have.property( 'oldSelection' ).that.is.instanceof( DocumentSelection );
+			expect( data ).to.have.property( 'oldSelection' ).that.is.instanceof( ViewDocumentSelection );
 			expect( data.oldSelection.rangeCount ).to.equal( 0 );
 
 			expect( data ).to.have.property( 'newSelection' ).that.is.instanceof( ViewSelection );
@@ -222,7 +236,7 @@ describe( 'SelectionObserver', () => {
 		viewDocument.on( 'selectionChange', ( evt, data ) => {
 			expect( data ).to.have.property( 'domSelection' ).that.equals( domDocument.getSelection() );
 
-			expect( data ).to.have.property( 'oldSelection' ).that.is.instanceof( DocumentSelection );
+			expect( data ).to.have.property( 'oldSelection' ).that.is.instanceof( ViewDocumentSelection );
 			expect( data.oldSelection.rangeCount ).to.equal( 0 );
 
 			expect( data ).to.have.property( 'newSelection' ).that.is.instanceof( ViewSelection );
@@ -259,7 +273,7 @@ describe( 'SelectionObserver', () => {
 
 	it( 'should not fire selectionChange for ignored target', done => {
 		viewDocument.on( 'selectionChange', () => {
-			throw 'selectionChange fired in ignored elements';
+			throw new Error( 'selectionChange fired in ignored elements' );
 		} );
 
 		view.getObserver( MutationObserver ).disable();
@@ -272,7 +286,7 @@ describe( 'SelectionObserver', () => {
 
 	it( 'should not fire selectionChange on render', done => {
 		viewDocument.on( 'selectionChange', () => {
-			throw 'selectionChange on render';
+			throw new Error( 'selectionChange on render' );
 		} );
 
 		setTimeout( done, 70 );
@@ -288,7 +302,7 @@ describe( 'SelectionObserver', () => {
 		view.getObserver( SelectionObserver ).disable();
 
 		viewDocument.on( 'selectionChange', () => {
-			throw 'selectionChange on render';
+			throw new Error( 'selectionChange on render' );
 		} );
 
 		setTimeout( done, 70 );
@@ -444,7 +458,7 @@ describe( 'SelectionObserver', () => {
 				expect( spy.calledOnce ).to.true;
 				expect( data ).to.have.property( 'domSelection' ).to.equal( domDocument.getSelection() );
 
-				expect( data ).to.have.property( 'oldSelection' ).to.instanceof( DocumentSelection );
+				expect( data ).to.have.property( 'oldSelection' ).to.instanceof( ViewDocumentSelection );
 				expect( data.oldSelection.rangeCount ).to.equal( 0 );
 
 				expect( data ).to.have.property( 'newSelection' ).to.instanceof( ViewSelection );
@@ -605,7 +619,7 @@ describe( 'SelectionObserver', () => {
 			viewDocument.on( 'selectionChange', ( evt, data ) => {
 				expect( data ).to.have.property( 'domSelection' ).that.equals( domDocument.getSelection() );
 
-				expect( data ).to.have.property( 'oldSelection' ).that.is.instanceof( DocumentSelection );
+				expect( data ).to.have.property( 'oldSelection' ).that.is.instanceof( ViewDocumentSelection );
 				expect( data.oldSelection.rangeCount ).to.equal( 0 );
 
 				expect( data ).to.have.property( 'newSelection' ).that.is.instanceof( ViewSelection );
@@ -642,7 +656,7 @@ describe( 'SelectionObserver', () => {
 			}, { priority: 'highest' } );
 
 			viewDocument.on( 'selectionChange', () => {
-				throw 'selectionChange fired';
+				throw new Error( 'selectionChange fired' );
 			} );
 
 			viewDocument.isSelecting = false;

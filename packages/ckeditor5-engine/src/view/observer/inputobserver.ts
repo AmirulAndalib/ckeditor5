@@ -7,11 +7,11 @@
  * @module engine/view/observer/inputobserver
  */
 
-import DomEventObserver from './domeventobserver.js';
-import type DomEventData from './domeventdata.js';
-import type ViewRange from '../range.js';
-import DataTransfer from '../datatransfer.js';
-import { env } from '@ckeditor/ckeditor5-utils';
+import { DomEventObserver } from './domeventobserver.js';
+import { type ViewDocumentDomEventData } from './domeventdata.js';
+import { type ViewRange } from '../range.js';
+import { ViewDataTransfer } from '../datatransfer.js';
+import { env, isText, indexOf } from '@ckeditor/ckeditor5-utils';
 import { INLINE_FILLER_LENGTH, startsWithFiller } from '../filler.js';
 
 // @if CK_DEBUG_TYPING // const { _debouncedLine, _buildLogMessage } = require( '../../dev-utils/utils.js' );
@@ -19,10 +19,10 @@ import { INLINE_FILLER_LENGTH, startsWithFiller } from '../filler.js';
 /**
  * Observer for events connected with data input.
  *
- * **Note**: This observer is attached by {@link module:engine/view/view~View} and available by default in all
+ * **Note**: This observer is attached by {@link module:engine/view/view~EditingView} and available by default in all
  * editor instances.
  */
-export default class InputObserver extends DomEventObserver<'beforeinput'> {
+export class InputObserver extends DomEventObserver<'beforeinput'> {
 	/**
 	 * @inheritDoc
 	 */
@@ -43,12 +43,12 @@ export default class InputObserver extends DomEventObserver<'beforeinput'> {
 		const view = this.view;
 		const viewDocument = view.document;
 
-		let dataTransfer: DataTransfer | null = null;
+		let dataTransfer: ViewDataTransfer | null = null;
 		let data: string | null = null;
 		let targetRanges: Array<ViewRange> = [];
 
 		if ( domEvent.dataTransfer ) {
-			dataTransfer = new DataTransfer( domEvent.dataTransfer );
+			dataTransfer = new ViewDataTransfer( domEvent.dataTransfer );
 		}
 
 		if ( domEvent.data !== null ) {
@@ -105,7 +105,8 @@ export default class InputObserver extends DomEventObserver<'beforeinput'> {
 				if ( viewStart && startsWithFiller( domRange.startContainer ) && domRange.startOffset < INLINE_FILLER_LENGTH ) {
 					// @if CK_DEBUG_TYPING // if ( ( window as any ).logCKETyping ) {
 					// @if CK_DEBUG_TYPING // 	console.info( ..._buildLogMessage( this, 'InputObserver',
-					// @if CK_DEBUG_TYPING // 		'Target range starts in an inline filler - adjusting it',
+					// @if CK_DEBUG_TYPING // 		'%cTarget range starts in an inline filler - adjusting it',
+					// @if CK_DEBUG_TYPING // 		'font-style: italic'
 					// @if CK_DEBUG_TYPING // 	) );
 					// @if CK_DEBUG_TYPING // }
 
@@ -126,6 +127,17 @@ export default class InputObserver extends DomEventObserver<'beforeinput'> {
 
 						return false;
 					}, { direction: 'backward', singleCharacters: true } );
+				}
+
+				// Check if there is no an inline filler just after the target range.
+				if ( isFollowedByInlineFiller( domRange.endContainer, domRange.endOffset ) ) {
+					// @if CK_DEBUG_TYPING // if ( ( window as any ).logCKETyping ) {
+					// @if CK_DEBUG_TYPING // 	console.info( ..._buildLogMessage( this, 'InputObserver',
+					// @if CK_DEBUG_TYPING // 		'%cTarget range ends just before an inline filler - prevent default behavior',
+					// @if CK_DEBUG_TYPING // 		'font-style: italic'
+					// @if CK_DEBUG_TYPING // 	) );
+					// @if CK_DEBUG_TYPING // }
+					domEvent.preventDefault();
 				}
 
 				if ( viewStart ) {
@@ -186,6 +198,9 @@ export default class InputObserver extends DomEventObserver<'beforeinput'> {
 
 			let partTargetRanges = targetRanges;
 
+			// Handle all parts on our side as we rely on paragraph inserting and synchronously updated view selection.
+			domEvent.preventDefault();
+
 			for ( let i = 0; i < parts.length; i++ ) {
 				const dataPart = parts[ i ];
 
@@ -236,24 +251,51 @@ export default class InputObserver extends DomEventObserver<'beforeinput'> {
 }
 
 /**
+ * Returns `true` if there is an inline filler just after the position in DOM.
+ * It walks up the DOM tree if the offset is at the end of the node.
+ */
+function isFollowedByInlineFiller( node: Node, offset: number ): boolean {
+	while ( node.parentNode ) {
+		if ( isText( node ) ) {
+			if ( offset != node.data.length ) {
+				return false;
+			}
+		} else {
+			if ( offset != node.childNodes.length ) {
+				return false;
+			}
+		}
+
+		offset = indexOf( node ) + 1;
+		node = node.parentNode;
+
+		if ( offset < node.childNodes.length && startsWithFiller( node.childNodes[ offset ] ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Fired before the web browser inputs, deletes, or formats some data.
  *
  * This event is introduced by {@link module:engine/view/observer/inputobserver~InputObserver} and available
- * by default in all editor instances (attached by {@link module:engine/view/view~View}).
+ * by default in all editor instances (attached by {@link module:engine/view/view~EditingView}).
  *
  * @see module:engine/view/observer/inputobserver~InputObserver
- * @eventName module:engine/view/document~Document#beforeinput
+ * @eventName module:engine/view/document~ViewDocument#beforeinput
  * @param data Event data containing detailed information about the event.
  */
 export type ViewDocumentInputEvent = {
 	name: 'beforeinput';
-	args: [ data: InputEventData ];
+	args: [ data: ViewDocumentInputEventData ];
 };
 
 /**
  * The value of the {@link ~ViewDocumentInputEvent} event.
  */
-export interface InputEventData extends DomEventData<InputEvent> {
+export interface ViewDocumentInputEventData extends ViewDocumentDomEventData<InputEvent> {
 
 	/**
 	 * The type of the input event (e.g. "insertText" or "deleteWordBackward"). Corresponds to native `InputEvent#inputType`.
@@ -265,14 +307,14 @@ export interface InputEventData extends DomEventData<InputEvent> {
 	 *
 	 * * the web browser and input events implementation (for instance [Level 1](https://www.w3.org/TR/input-events-1/) or
 	 * [Level 2](https://www.w3.org/TR/input-events-2/)),
-	 * * {@link module:engine/view/observer/inputobserver~InputEventData#inputType input type}
+	 * * {@link module:engine/view/observer/inputobserver~ViewDocumentInputEventData#inputType input type}
 	 *
 	 * text data is sometimes passed in the `data` and sometimes in the `dataTransfer` property.
 	 *
 	 * * If `InputEvent#data` was set, this property reflects its value.
 	 * * If `InputEvent#data` is unavailable, this property contains the `'text/plain'` data from
-	 * {@link module:engine/view/observer/inputobserver~InputEventData#dataTransfer}.
-	 * * If the event ({@link module:engine/view/observer/inputobserver~InputEventData#inputType input type})
+	 * {@link module:engine/view/observer/inputobserver~ViewDocumentInputEventData#dataTransfer}.
+	 * * If the event ({@link module:engine/view/observer/inputobserver~ViewDocumentInputEventData#inputType input type})
 	 * provides no data whatsoever, this property is `null`.
 	 */
 	readonly data: string | null;
@@ -282,20 +324,20 @@ export interface InputEventData extends DomEventData<InputEvent> {
 	 *
 	 * The value is `null` when no `dataTransfer` was passed along with the input event.
 	 */
-	readonly dataTransfer: DataTransfer;
+	readonly dataTransfer: ViewDataTransfer;
 
 	/**
 	 * A flag indicating that the `beforeinput` event was fired during composition.
 	 *
 	 * Corresponds to the
-	 * {@link module:engine/view/document~Document#event:compositionstart},
-	 * {@link module:engine/view/document~Document#event:compositionupdate},
-	 * and {@link module:engine/view/document~Document#event:compositionend } trio.
+	 * {@link module:engine/view/document~ViewDocument#event:compositionstart},
+	 * {@link module:engine/view/document~ViewDocument#event:compositionupdate},
+	 * and {@link module:engine/view/document~ViewDocument#event:compositionend } trio.
 	 */
 	readonly isComposing: boolean;
 
 	/**
-	 * Editing {@link module:engine/view/range~Range view ranges} corresponding to DOM ranges provided by the web browser
+	 * Editing {@link module:engine/view/range~ViewRange view ranges} corresponding to DOM ranges provided by the web browser
 	 * (as returned by `InputEvent#getTargetRanges()`).
 	 */
 	readonly targetRanges: Array<ViewRange>;

@@ -36,19 +36,24 @@ import {
 import type { EditorUI } from '@ckeditor/ckeditor5-ui';
 import { ContextWatchdog, EditorWatchdog } from '@ckeditor/ckeditor5-watchdog';
 
-import Context from '../context.js';
-import PluginCollection from '../plugincollection.js';
-import CommandCollection, { type CommandsMap } from '../commandcollection.js';
-import EditingKeystrokeHandler from '../editingkeystrokehandler.js';
-import Accessibility from '../accessibility.js';
+import { Context } from '../context.js';
+import { PluginCollection } from '../plugincollection.js';
+import { CommandCollection, type CommandsMap } from '../commandcollection.js';
+import { EditingKeystrokeHandler } from '../editingkeystrokehandler.js';
+import { Accessibility } from '../accessibility.js';
 import { getEditorUsageData, type EditorUsageData } from './utils/editorusagedata.js';
 
 import type { LoadedPlugins, PluginConstructor } from '../plugin.js';
 import type { EditorConfig } from './editorconfig.js';
 
+import '../../theme/core.css';
+
 declare global {
 	// eslint-disable-next-line no-var
 	var CKEDITOR_GLOBAL_LICENSE_KEY: string | undefined;
+
+	// eslint-disable-next-line no-var
+	var CKEDITOR_WARNING_SUPPRESSIONS: Record<string, boolean>;
 }
 
 /**
@@ -69,7 +74,7 @@ declare global {
  * the specific editor implements also the {@link ~Editor#ui} property
  * (as most editor implementations do).
  */
-export default abstract class Editor extends /* #__PURE__ */ ObservableMixin() {
+export abstract class Editor extends /* #__PURE__ */ ObservableMixin() {
 	/**
 	 * A required name of the editor class. The name should reflect the constructor name.
 	 */
@@ -169,7 +174,7 @@ export default abstract class Editor extends /* #__PURE__ */ ObservableMixin() {
 	 * Note: Certain typing-oriented keystrokes (like <kbd>Backspace</kbd> or <kbd>Enter</kbd>) are handled
 	 * by a low-level mechanism and trying to listen to them via the keystroke handler will not work reliably.
 	 * To handle these specific keystrokes, see the events fired by the
-	 * {@link module:engine/view/document~Document editing view document} (`editor.editing.view.document`).
+	 * {@link module:engine/view/document~ViewDocument editing view document} (`editor.editing.view.document`).
 	 */
 	public readonly keystrokes: EditingKeystrokeHandler;
 
@@ -544,11 +549,13 @@ export default abstract class Editor extends /* #__PURE__ */ ObservableMixin() {
 
 			if ( [ 'development', 'evaluation', 'trial' ].includes( licensePayload.licenseType ) ) {
 				const { licenseType } = licensePayload;
-				const sessionStarted = sessionStorage.getItem( 'ckeditor5-development-session-started' );
 
-				if ( !sessionStarted ) {
+				window.CKEDITOR_WARNING_SUPPRESSIONS = window.CKEDITOR_WARNING_SUPPRESSIONS || {};
+
+				if ( !window.CKEDITOR_WARNING_SUPPRESSIONS[ licenseType ] ) {
 					warnAboutNonProductionLicenseKey( licenseType );
-					sessionStorage.setItem( 'ckeditor5-development-session-started', 'true' );
+
+					window.CKEDITOR_WARNING_SUPPRESSIONS[ licenseType ] = true;
 				}
 			}
 
@@ -884,7 +891,7 @@ export default abstract class Editor extends /* #__PURE__ */ ObservableMixin() {
 	 * Focuses the editor.
 	 *
 	 * **Note** To explicitly focus the editing area of the editor, use the
-	 * {@link module:engine/view/view~View#focus `editor.editing.view.focus()`} method of the editing view.
+	 * {@link module:engine/view/view~EditingView#focus `editor.editing.view.focus()`} method of the editing view.
 	 *
 	 * Check out the {@glink framework/deep-dive/ui/focus-tracking#focus-in-the-editor-ui Focus in the editor UI} section
 	 * of the {@glink framework/deep-dive/ui/focus-tracking Deep dive into focus tracking} guide to learn more.
